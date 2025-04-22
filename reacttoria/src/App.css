@@ -1,0 +1,23 @@
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  text-align: center;
+  background-color: #282c34;
+  min-height: 100vh;
+  padding: 1rem; /* Use padding instead of fixed margins */
+}
+
+.App-header {
+  background-color: #282c34;
+  padding: 20px; 
+  margin: 0;
+  padding: 0;
+}
+
+.col-12, .App-title, .row .lead {
+  font-size: 2.5em; 
+  color: white; 
+}
