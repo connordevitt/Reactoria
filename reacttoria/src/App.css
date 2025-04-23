@@ -1,23 +1,90 @@
+
 body, html {
   margin: 0;
   padding: 0;
 }
 
+
 .App {
   text-align: center;
   background-color: #282c34;
   min-height: 100vh;
-  padding: 1rem; /* Use padding instead of fixed margins */
+  padding: 1rem; 
 }
+
 
 .App-header {
   background-color: #282c34;
-  padding: 20px; 
+  padding: 20px;
   margin: 0;
-  padding: 0;
 }
 
 .col-12, .App-title, .row .lead {
-  font-size: 2.5em; 
-  color: white; 
+  font-size: 2.5em;
+  color: white;
+}
+
+.card-body {
+  border-radius: 15px; 
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #f8f9fa; 
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+}
+
+
+.card-body:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3); 
+}
+
+
+.standings-container {
+  max-width: 800px;
+  margin: 2rem auto; 
+  padding: 1rem;
+}
+
+
+.card {
+  border-radius: 15px;
+  background: linear-gradient(145deg, #3a3f47, #2c3138); 
+  color: #f8f9fa; 
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); 
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3); 
+}
+
+
+.table {
+  margin-bottom: 0; 
+}
+
+.table th {
+  background-color: #495057; 
+  color: #f8f9fa; 
+}
+
+.table td {
+  background-color: #343a40; 
+  color: #f8f9fa; 
+}
+
+@media (max-width: 768px) {
+  .standings-container {
+    padding: 0.5rem;
+  }
+
+  .card {
+    border-radius: 10px;
+  }
+
+  .card-body {
+    padding: 1rem;
+    font-size: 1rem;
+  }
 }
