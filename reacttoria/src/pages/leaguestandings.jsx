@@ -1,4 +1,4 @@
-//leaguestandings.jsx will be the main page displaying the standings.jsx component and the navbar component. It will a second page that you can go to after app.jsx
+//leaguestandings.jsx
 
 import React from "react";
 import NavBar from "../components/navbar";
@@ -9,6 +9,7 @@ const LeagueStandings = () => {
         <div>    
             <NavBar />
             <Standings />
+            
         </div>
     );
 };

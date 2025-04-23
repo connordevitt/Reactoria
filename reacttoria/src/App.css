@@ -1,17 +1,14 @@
-
 body, html {
   margin: 0;
   padding: 0;
 }
 
-
 .App {
   text-align: center;
   background-color: #282c34;
   min-height: 100vh;
-  padding: 1rem; 
+  padding: 1rem;
 }
-
 
 .App-header {
   background-color: #282c34;
@@ -25,53 +22,55 @@ body, html {
 }
 
 .card-body {
-  border-radius: 15px; 
+  border-radius: 15px;
   padding: 2rem;
   font-size: 1.2rem;
-  color: #f8f9fa; 
-  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+  color: #f8f9fa;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 
 .card-body:hover {
-  transform: translateY(-5px); 
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3); 
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
 }
-
 
 .standings-container {
   max-width: 800px;
-  margin: 2rem auto; 
+  margin: 2rem auto;
   padding: 1rem;
 }
 
-
 .card {
   border-radius: 15px;
-  background: linear-gradient(145deg, #3a3f47, #2c3138); 
-  color: #f8f9fa; 
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); 
+  background: linear-gradient(145deg, #3a3f47, #2c3138);
+  color: #f8f9fa;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-5px); 
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3); 
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
 }
 
-
 .table {
-  margin-bottom: 0; 
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.table th, .table td {
+  padding: 0.5rem;
 }
 
 .table th {
-  background-color: #495057; 
-  color: #f8f9fa; 
+  background-color: #495057;
+  color: #f8f9fa;
+  font-size: 0.95rem;
 }
 
 .table td {
-  background-color: #343a40; 
-  color: #f8f9fa; 
+  background-color: #343a40;
+  color: #f8f9fa;
 }
 
 @media (max-width: 768px) {
@@ -86,5 +85,13 @@ body, html {
   .card-body {
     padding: 1rem;
     font-size: 1rem;
+  }
+
+  .table {
+    font-size: 0.8rem;
+  }
+
+  .table th, .table td {
+    padding: 0.4rem;
   }
 }
