@@ -3,10 +3,65 @@ import axios from "axios";
 import Table from "react-bootstrap/Table";
 import Dropdown from "react-bootstrap/Dropdown";
 
+const divisionTeams = {
+  "AL Central": [
+    "Cleveland Guardians",
+    "Detroit Tigers",
+    "Kansas City Royals",
+    "Minnesota Twins",
+    "Chicago White Sox",
+  ],
+  "AL East": [
+    "Tampa Bay Rays",
+    "Toronto Blue Jays",
+    "Baltimore Orioles",
+    "New York Yankees",
+    "Boston Red Sox",
+  ],
+  "AL West": [
+    "Seattle Mariners",
+    "Houston Astros",
+    "Los Angeles Angels",
+    "Texas Rangers",
+    "Oakland Athletics",
+  ],
+  "NL Central": [
+    "St. Louis Cardinals",
+    "Milwaukee Brewers",
+    "Chicago Cubs",
+    "Cincinnati Reds",
+    "Pittsburgh Pirates",
+  ],
+  "NL East": [
+    "Miami Marlins",
+    "Washington Nationals",
+    "Atlanta Braves",
+    "New York Mets",
+    "Philadelphia Phillies",
+  ],
+  "NL West": [
+    "San Diego Padres",
+    "Colorado Rockies",
+    "San Francisco Giants",
+    "Los Angeles Dodgers",
+    "Arizona Diamondbacks",
+  ],
+};
+
 const Standings = () => {
   const [alStandings, setALStandings] = useState([]);
   const [nlStandings, setNLStandings] = useState([]);
-  const [view, setView] = useState("League"); // Track the selected view: "League" or "Division"
+  const [view, setView] = useState("League"); // "League" or "Division"
+  console.log ("Standings data:", Standings);
+
+  const divisionNameMap = {
+    "AL Central": "American League Central",
+    "AL East": "American League East",
+    "AL West": "American League West",
+    "NL Central": "National League Central",
+    "NL East": "National League East",
+    "NL West": "National League West",
+  };
 
   useEffect(() => {
     const fetchStandings = async () => {
@@ -14,30 +69,47 @@ const Standings = () => {
         const response = await axios.get(
           "https://statsapi.mlb.com/api/v1/standings?leagueId=103"
         );
+        console.log("AL Standings API Response:", response.data.records);
         setALStandings(response.data.records);
-
+  
         const nlResponse = await axios.get(
           "https://statsapi.mlb.com/api/v1/standings?leagueId=104"
         );
+        console.log("NL Standings API Response:", nlResponse.data.records);
         setNLStandings(nlResponse.data.records);
       } catch (error) {
         console.error("Error fetching standings:", error);
       }
     };
-
+  
     fetchStandings();
   }, []);
 
   const sortLeagueStandings = (standings) => {
-    return standings.flatMap((division) => [...division.teamRecords])
-      .sort((a, b) => parseFloat(b.winningPercentage) - parseFloat(a.winningPercentage));
+    return standings.flatMap((division) => {
+      if (!Array.isArray(division.teamRecords)) {
+        console.warn("Missing or invalid teamRecords for division:", division);
+        return []; 
+      }
+      return division.teamRecords;
+    }).sort((a, b) => parseFloat(b.winningPercentage) - parseFloat(a.winningPercentage));
   };
 
   const getDivisionStandings = (standings, divisionName) => {
-    return standings.flatMap((division) =>
-      division.teamRecords.filter((record) => record.division?.name === divisionName)
-    );
+    const teamsInDivision = divisionTeams[divisionName];
+    console.log(`Filtering for teams in division: ${divisionName}`, teamsInDivision);
+  
+    return standings.flatMap((division) => {
+      if (!Array.isArray(division.teamRecords)) {
+        console.warn("Missing or invalid teamRecords for division:", division);
+        return [];
+      }
+      return division.teamRecords.filter((teamRecord) =>
+        teamsInDivision.includes(teamRecord.team?.name)
+      );
+    });
   };
+
 
   const renderLeagueTable = (standings) => {
     const sortedStandings = sortLeagueStandings(standings);
@@ -74,19 +146,40 @@ const Standings = () => {
 
   const renderDivisionStandings = (divisionName, standings) => {
     const divisionStandings = getDivisionStandings(standings, divisionName);
-
+  
     if (!divisionStandings || divisionStandings.length === 0) {
       return <p className="text-center text-white">No standings data available for {divisionName}.</p>;
     }
-
+  
     return (
       <div>
         <h4 className="text-center text-white">{divisionName}</h4>
-        {renderLeagueTable(divisionStandings)}
+        <Table striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Wins</th>
+              <th>Losses</th>
+              <th>Win Percentage</th>
+              <th>GB</th>
+            </tr>
+          </thead>
+          <tbody>
+            {divisionStandings.map((record, index) => (
+              <tr key={index}>
+                <td>{record.team?.name || "N/A"}</td>
+                <td>{record.wins || "N/A"}</td>
+                <td>{record.losses || "N/A"}</td>
+                <td>{record.winningPercentage || "N/A"}</td>
+                <td>{record.gamesBack || "N/A"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+        <hr className="text-white" />
       </div>
     );
   };
-
   return (
     <div>
       <h2 className="text-center text-white">MLB 2025 Standings</h2>
