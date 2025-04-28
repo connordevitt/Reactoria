@@ -21,6 +21,35 @@ body, html {
   color: white;
 }
 
+.table {
+  table-layout: fixed;
+  width: 100%;
+}
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); 
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999; 
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  color: #ffffff; 
+}
+
+.table th, .table td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.5rem;
+}
+
 .card-body {
   border-radius: 15px;
   padding: 2rem;
@@ -71,6 +100,12 @@ body, html {
 .table td {
   background-color: #343a40;
   color: #f8f9fa;
+}
+footer {
+  background-color: #6c757d; /* Medium gray */
+  color: #f8f9fa; /* Light text */
+  text-align: center;
+  padding: 1rem 0;
 }
 
 @media (max-width: 768px) {

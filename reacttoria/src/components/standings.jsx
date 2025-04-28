@@ -2,7 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Table from "react-bootstrap/Table";
 import Dropdown from "react-bootstrap/Dropdown";
+import "bootstrap/dist/css/bootstrap.min.css"; 
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+
+
+// Go Yankees! 
 const divisionTeams = {
   "AL Central": [
     "Cleveland Guardians",
@@ -52,6 +57,7 @@ const Standings = () => {
   const [alStandings, setALStandings] = useState([]);
   const [nlStandings, setNLStandings] = useState([]);
   const [view, setView] = useState("League"); // "League" or "Division"
+  const [loading, setLoading] = useState(true);
   console.log ("Standings data:", Standings);
 
   const divisionNameMap = {
@@ -196,7 +202,6 @@ const Standings = () => {
         </Dropdown.Menu>
       </Dropdown>
 
-      {/* Conditionally render standings */}
       {view === "League" ? (
         <>
           {/* League Standings */}
