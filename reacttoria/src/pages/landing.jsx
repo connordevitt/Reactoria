@@ -14,6 +14,7 @@ const Landing = () => {
   }, []);
 
   return (
+
     <div className="bg-dark text-white min-vh-100 d-flex flex-column justify-content-between">
       <header className="text-center py-5" data-aos="fade-down">
         <div className="container">
@@ -34,6 +35,7 @@ const Landing = () => {
       </header>
 
       <main className="container text-center py-4">
+        <div className="row ">
         <div
           className="card bg-secondary text-white mb-4"
           data-aos="fade-right"
@@ -50,7 +52,7 @@ const Landing = () => {
             </p>
           </div>
         </div>
-
+        </div>
         <div className="card bg-secondary text-white mb-4" data-aos="fade-left">
           <div className="card-body">
             <h2 className="card-title fw-bold">Have a favorite team?</h2>
@@ -79,10 +81,8 @@ const Landing = () => {
 
       <footer
         className="bg-secondary py-3 mt-auto"
-        data-aos="fade-in"
-        style={{ border: "2px solid red" }}
       >
-        <div className="container text-center">
+        <div id="footer-content" className="container text-center">
           <small className="text-white">
             &copy; {new Date().getFullYear()} MLB Standings Tracker. All rights
             reserved.

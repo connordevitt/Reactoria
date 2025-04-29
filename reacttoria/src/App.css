@@ -1,17 +1,69 @@
-body, html {
-  margin: 0;
-  padding: 0;
+html, body, .App, .container {
+  width: 100%;
 }
 
-.App {
+/* Reset default margins and ensure full width */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  min-height: 100%;
+  background-color: #343a40;
+  overflow-x: hidden;
+}
+
+body, .App {
+  background-color: #343a40 !important;
+}
+
+/* Container styles */
+.container {
+  padding: 2rem;
+  width: 100%;
+  background-color: transparent;
+}
+
+
+/* Card styles */
+.card {
+  border-radius: 15px;
+  background: linear-gradient(145deg, #3a3f47, #2c3138);
+  color: #f8f9fa;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 2rem;
+}
+
+.card-body {
+  border-radius: 15px;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #f8f9fa;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+}
+
+#footer-content {
+  background-color: #6c757d;
+  color: #f8f9fa;
   text-align: center;
-  background-color: #282c34;
-  min-height: 100vh;
   padding: 1rem;
 }
 
+.App {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #343a40;
+  color: #f8f9fa;
+}
+
 .App-header {
-  background-color: #282c34;
   padding: 20px;
   margin: 0;
 }
@@ -25,6 +77,7 @@ body, html {
   table-layout: fixed;
   width: 100%;
 }
+
 .loading-spinner {
   display: flex;
   justify-content: center;
@@ -50,36 +103,10 @@ body, html {
   padding: 0.5rem;
 }
 
-.card-body {
-  border-radius: 15px;
-  padding: 2rem;
-  font-size: 1.2rem;
-  color: #f8f9fa;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card-body:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-}
-
 .standings-container {
   max-width: 800px;
   margin: 2rem auto;
   padding: 1rem;
-}
-
-.card {
-  border-radius: 15px;
-  background: linear-gradient(145deg, #3a3f47, #2c3138);
-  color: #f8f9fa;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
 }
 
 .table {
@@ -100,12 +127,6 @@ body, html {
 .table td {
   background-color: #343a40;
   color: #f8f9fa;
-}
-footer {
-  background-color: #6c757d; /* Medium gray */
-  color: #f8f9fa; /* Light text */
-  text-align: center;
-  padding: 1rem 0;
 }
 
 @media (max-width: 768px) {

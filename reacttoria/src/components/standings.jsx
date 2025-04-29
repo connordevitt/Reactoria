@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Table from "react-bootstrap/Table";
 import Dropdown from "react-bootstrap/Dropdown";
-import "bootstrap/dist/css/bootstrap.min.css"; 
+import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
-
-
-// Go Yankees! 
+// Go Yankees!
 const divisionTeams = {
   "AL Central": [
     "Cleveland Guardians",
@@ -58,7 +56,7 @@ const Standings = () => {
   const [nlStandings, setNLStandings] = useState([]);
   const [view, setView] = useState("League"); // "League" or "Division"
   const [loading, setLoading] = useState(true);
-  console.log ("Standings data:", Standings);
+  console.log("Standings data:", Standings);
 
   const divisionNameMap = {
     "AL Central": "American League Central",
@@ -77,7 +75,7 @@ const Standings = () => {
         );
         console.log("AL Standings API Response:", response.data.records);
         setALStandings(response.data.records);
-  
+
         const nlResponse = await axios.get(
           "https://statsapi.mlb.com/api/v1/standings?leagueId=104"
         );
@@ -87,24 +85,35 @@ const Standings = () => {
         console.error("Error fetching standings:", error);
       }
     };
-  
+
     fetchStandings();
   }, []);
 
   const sortLeagueStandings = (standings) => {
-    return standings.flatMap((division) => {
-      if (!Array.isArray(division.teamRecords)) {
-        console.warn("Missing or invalid teamRecords for division:", division);
-        return []; 
-      }
-      return division.teamRecords;
-    }).sort((a, b) => parseFloat(b.winningPercentage) - parseFloat(a.winningPercentage));
+    return standings
+      .flatMap((division) => {
+        if (!Array.isArray(division.teamRecords)) {
+          console.warn(
+            "Missing or invalid teamRecords for division:",
+            division
+          );
+          return [];
+        }
+        return division.teamRecords;
+      })
+      .sort(
+        (a, b) =>
+          parseFloat(b.winningPercentage) - parseFloat(a.winningPercentage)
+      );
   };
 
   const getDivisionStandings = (standings, divisionName) => {
     const teamsInDivision = divisionTeams[divisionName];
-    console.log(`Filtering for teams in division: ${divisionName}`, teamsInDivision);
-  
+    console.log(
+      `Filtering for teams in division: ${divisionName}`,
+      teamsInDivision
+    );
+
     return standings.flatMap((division) => {
       if (!Array.isArray(division.teamRecords)) {
         console.warn("Missing or invalid teamRecords for division:", division);
@@ -116,12 +125,13 @@ const Standings = () => {
     });
   };
 
-
   const renderLeagueTable = (standings) => {
     const sortedStandings = sortLeagueStandings(standings);
 
     if (!sortedStandings || sortedStandings.length === 0) {
-      return <p className="text-center text-white">No standings data available.</p>;
+      return (
+        <p className="text-center text-white">No standings data available.</p>
+      );
     }
 
     return (
@@ -152,11 +162,15 @@ const Standings = () => {
 
   const renderDivisionStandings = (divisionName, standings) => {
     const divisionStandings = getDivisionStandings(standings, divisionName);
-  
+
     if (!divisionStandings || divisionStandings.length === 0) {
-      return <p className="text-center text-white">No standings data available for {divisionName}.</p>;
+      return (
+        <p className="text-center text-white">
+          No standings data available for {divisionName}.
+        </p>
+      );
     }
-  
+
     return (
       <div>
         <h4 className="text-center text-white">{divisionName}</h4>
@@ -190,15 +204,18 @@ const Standings = () => {
     <div>
       <h2 className="text-center text-white">MLB 2025 Standings</h2>
 
-      {/* Dropdown to switch views */}
       <Dropdown className="mb-4 text-center">
-        <Dropdown.Toggle variant="dark" id="dropdown-basic">
+        <Dropdown.Toggle variant="dark" id="dropdown-basic" className="mt-5">
           {view === "League" ? "League Standings" : "Division Standings"}
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item onClick={() => setView("League")}>League Standings</Dropdown.Item>
-          <Dropdown.Item onClick={() => setView("Division")}>Division Standings</Dropdown.Item>
+          <Dropdown.Item onClick={() => setView("League")}>
+            League Standings
+          </Dropdown.Item>
+          <Dropdown.Item onClick={() => setView("Division")}>
+            Division Standings
+          </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
