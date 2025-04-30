@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import NavBar from './components/navbar';
 import LeagueStandings from './pages/leaguestandings';
 import Landing from './pages/landing'; // Import the new Landing page
@@ -8,14 +8,15 @@ import React, { Suspense } from 'react';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/Reactoria">
       <div className="App">
         <NavBar />
         <Suspense fallback={<LazyLoadSpinner />}>
           <Routes>
-            <Route path="/" element={<Landing />} /> {/* Landing page as default */}
+            <Route path="/" element={<Landing />} />
             <Route path="/leaguestandings" element={<LeagueStandings />} />
-            <Route path="/about" element={<About />} /> {/* Optional About page */}
+            <Route path="/about" element={<About />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
       </div>
