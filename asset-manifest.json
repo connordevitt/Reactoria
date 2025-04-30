@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/reacttoria/static/css/main.d95bd630.css",
-    "main.js": "/reacttoria/static/js/main.736bd652.js",
-    "static/js/516.d5f9cca9.chunk.js": "/reacttoria/static/js/516.d5f9cca9.chunk.js",
-    "static/js/453.44308f28.chunk.js": "/reacttoria/static/js/453.44308f28.chunk.js",
-    "static/js/138.01bb44ae.chunk.js": "/reacttoria/static/js/138.01bb44ae.chunk.js",
-    "static/media/Wrigley2.jpg.png": "/reacttoria/static/media/Wrigley2.jpg.2358e1da78e7228e9e7a.png",
-    "index.html": "/reacttoria/index.html",
-    "main.d95bd630.css.map": "/reacttoria/static/css/main.d95bd630.css.map",
-    "main.736bd652.js.map": "/reacttoria/static/js/main.736bd652.js.map",
-    "516.d5f9cca9.chunk.js.map": "/reacttoria/static/js/516.d5f9cca9.chunk.js.map",
-    "453.44308f28.chunk.js.map": "/reacttoria/static/js/453.44308f28.chunk.js.map",
-    "138.01bb44ae.chunk.js.map": "/reacttoria/static/js/138.01bb44ae.chunk.js.map"
+    "main.css": "/Reactoria/static/css/main.c4bb8931.css",
+    "main.js": "/Reactoria/static/js/main.8d4aced7.js",
+    "static/js/516.d5f9cca9.chunk.js": "/Reactoria/static/js/516.d5f9cca9.chunk.js",
+    "static/js/453.44308f28.chunk.js": "/Reactoria/static/js/453.44308f28.chunk.js",
+    "static/js/138.01bb44ae.chunk.js": "/Reactoria/static/js/138.01bb44ae.chunk.js",
+    "static/media/Wrigley2.jpg.png": "/Reactoria/static/media/Wrigley2.jpg.2358e1da78e7228e9e7a.png",
+    "index.html": "/Reactoria/index.html",
+    "main.c4bb8931.css.map": "/Reactoria/static/css/main.c4bb8931.css.map",
+    "main.8d4aced7.js.map": "/Reactoria/static/js/main.8d4aced7.js.map",
+    "516.d5f9cca9.chunk.js.map": "/Reactoria/static/js/516.d5f9cca9.chunk.js.map",
+    "453.44308f28.chunk.js.map": "/Reactoria/static/js/453.44308f28.chunk.js.map",
+    "138.01bb44ae.chunk.js.map": "/Reactoria/static/js/138.01bb44ae.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d95bd630.css",
-    "static/js/main.736bd652.js"
+    "static/css/main.c4bb8931.css",
+    "static/js/main.8d4aced7.js"
   ]
 }
