@@ -134,7 +134,7 @@ const Standings = () => {
 
     if (!sortedStandings || sortedStandings.length === 0) {
       return (
-        <p className="text-center text-white">No standings data available.</p>
+        <p className="text-center text-white">No standings data available</p>
       );
     }
 
