@@ -5,6 +5,10 @@ import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+const teamURLS = {
+  "New York Yankees": "https://www.mlb.com/yankees/",
+};
+
 // Go Yankees!
 const divisionTeams = {
   "AL Central": [
@@ -138,11 +142,11 @@ const Standings = () => {
       <Table striped bordered hover responsive>
         <thead>
           <tr>
-            <th>Team</th>
-            <th>Wins</th>
-            <th>Losses</th>
-            <th>Win Percentage</th>
-            <th>GB</th>
+            <th className="Team-name">Team</th>
+            <th className="stat-col">W</th>
+            <th className="stat-col">L</th>
+            <th className="stat-col">Win %</th>
+            <th className="stat-col">GB</th>
           </tr>
         </thead>
         <tbody>
@@ -177,17 +181,30 @@ const Standings = () => {
         <Table striped bordered hover responsive>
           <thead>
             <tr>
-              <th>Team</th>
-              <th>Wins</th>
-              <th>Losses</th>
-              <th>Win Percentage</th>
-              <th>GB</th>
+              <th className="Team-name">Team</th>
+              <th className="stat-col">W</th>
+              <th className="stat-col">L</th>
+              <th className="stat-col">Win %</th>
+              <th className="stat-col">GB</th>
             </tr>
           </thead>
           <tbody>
             {divisionStandings.map((record, index) => (
               <tr key={index}>
-                <td>{record.team?.name || "N/A"}</td>
+                <td>
+                  {record.team?.name && teamURLS[record.team.name] ? (
+                    <a
+                      href={teamURLS[record.team.name]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      {record.team.name}
+                    </a>
+                  ) : (
+                    record.team?.name || "N/A"
+                  )}
+                </td>
                 <td>{record.wins || "N/A"}</td>
                 <td>{record.losses || "N/A"}</td>
                 <td>{record.winningPercentage || "N/A"}</td>

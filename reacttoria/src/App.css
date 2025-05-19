@@ -151,6 +151,15 @@ footer .container-fluid {
   background-color: #343a40;
   color: #f8f9fa;
 }
+.stat-col {
+ width: 15%;
+}
+
+.Team-name{
+  width: 20%;
+  text-align: left;
+}
+
 .hero-section {
   background: url('../public/images/Wrigley2.jpg.png');
   background-size: cover;
