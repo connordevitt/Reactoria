@@ -152,12 +152,11 @@ footer .container-fluid {
   color: #f8f9fa;
 }
 .stat-col {
- width: 15%;
+ width: 2%;
 }
 
 .Team-name{
-  width: 20%;
-  text-align: left;
+  width: 2%; /* Adjust the width as needed because I really can't find a sweet spot. */
 }
 
 .hero-section {

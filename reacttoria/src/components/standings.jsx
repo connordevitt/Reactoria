@@ -7,6 +7,35 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 const teamURLS = {
   "New York Yankees": "https://www.mlb.com/yankees/",
+  "Boston Red Sox": "https://www.mlb.com/redsox/",
+  "Tampa Bay Rays": "https://www.mlb.com/rays/",
+  "Toronto Blue Jays": "https://www.mlb.com/bluejays/",
+  "Baltimore Orioles": "https://www.mlb.com/orioles/",
+  "Cleveland Guardians": "https://www.mlb.com/guardians/",
+  "Detroit Tigers": "https://www.mlb.com/tigers/",
+  "Kansas City Royals": "https://www.mlb.com/royals/",
+  "Minnesota Twins": "https://www.mlb.com/twins/",
+  "Chicago White Sox": "https://www.mlb.com/whitesox/",
+  "Seattle Mariners": "https://www.mlb.com/mariners/",
+  "Houston Astros": "https://www.mlb.com/astros/",
+  "Los Angeles Angels": "https://www.mlb.com/angels/",
+  "Texas Rangers": "https://www.mlb.com/rangers/",
+  "Oakland Athletics": "https://www.mlb.com/athletics/",
+  "St. Louis Cardinals": "https://www.mlb.com/cardinals/",
+  "Milwaukee Brewers": "https://www.mlb.com/brewers/",
+  "Chicago Cubs": "https://www.mlb.com/cubs/",
+  "Cincinnati Reds": "https://www.mlb.com/reds/",
+  "Pittsburgh Pirates": "https://www.mlb.com/pirates/",
+  "Miami Marlins": "https://www.mlb.com/marlins/",
+  "Washington Nationals": "https://www.mlb.com/nationals/",
+  "Atlanta Braves": "https://www.mlb.com/braves/",
+  "New York Mets": "https://www.mlb.com/mets/",
+  "Philadelphia Phillies": "https://www.mlb.com/phillies/",
+  "San Diego Padres": "https://www.mlb.com/padres/",
+  "Colorado Rockies": "https://www.mlb.com/rockies/",
+  "San Francisco Giants": "https://www.mlb.com/giants/",
+  "Los Angeles Dodgers": "https://www.mlb.com/dodgers/",
+  "Arizona Diamondbacks": "https://www.mlb.com/diamondbacks/",
 };
 
 // Go Yankees!
@@ -62,7 +91,7 @@ const Standings = () => {
   const [loading, setLoading] = useState(true);
   console.log("Standings data:", Standings);
 
-  const divisionNameMap = {
+  /* const divisionNameMap = {
     "AL Central": "American League Central",
     "AL East": "American League East",
     "AL West": "American League West",
@@ -70,7 +99,7 @@ const Standings = () => {
     "NL East": "National League East",
     "NL West": "National League West",
   };
-
+  */
   useEffect(() => {
     const fetchStandings = async () => {
       try {
@@ -152,7 +181,20 @@ const Standings = () => {
         <tbody>
           {sortedStandings.map((record, index) => (
             <tr key={index}>
-              <td>{record.team?.name || "N/A"}</td>
+              <td>
+                {record.team?.name && teamURLS[record.team.name] ? (
+                  <a
+                    href={teamURLS[record.team.name]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    {record.team.name}
+                  </a>
+                ) : (
+                  record.team?.name || "N/A"
+                )}
+              </td>
               <td>{record.wins || "N/A"}</td>
               <td>{record.losses || "N/A"}</td>
               <td>{record.winningPercentage || "N/A"}</td>
