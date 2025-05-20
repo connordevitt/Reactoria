@@ -212,7 +212,7 @@ const Standings = () => {
     if (!divisionStandings || divisionStandings.length === 0) {
       return (
         <p className="text-center text-white">
-          No standings data available for {divisionName}.
+          No standings data available for: {divisionName}.
         </p>
       );
     }
