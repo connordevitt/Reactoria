@@ -4,6 +4,8 @@ import Table from "react-bootstrap/Table";
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 const teamURLS = {
   "New York Yankees": "https://www.mlb.com/yankees/",
@@ -85,6 +87,7 @@ const divisionTeams = {
 };
 
 const Standings = () => {
+  const navigate = useNavigate();
   const [alStandings, setALStandings] = useState([]);
   const [nlStandings, setNLStandings] = useState([]);
   const [view, setView] = useState("League"); // "League" or "Division"
@@ -182,19 +185,31 @@ const Standings = () => {
           {sortedStandings.map((record, index) => (
             <tr key={index}>
               <td>
-                {record.team?.name && teamURLS[record.team.name] ? (
-                  <a
-                    href={teamURLS[record.team.name]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    {record.team.name}
-                  </a>
-                ) : (
-                  record.team?.name || "N/A"
-                )}
-              </td>
+  <div className="d-flex justify-content-between align-items-center">
+    <a
+      href={teamURLS[record.team.name]}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ textDecoration: "none", color: "inherit", minWidth: "150px" }}
+    >
+      {record.team.name}
+    </a>
+    <Button
+      variant="outline-light"
+      size="sm"
+      onClick={() => {
+        const teamId = record.team?.id;
+        if (!teamId) {
+          console.error("Team ID not available");
+          return;
+        }
+        navigate(`/team/${teamId}`);
+      }}
+    >
+      Stats
+    </Button>
+  </div>
+</td>
               <td>{record.wins || "N/A"}</td>
               <td>{record.losses || "N/A"}</td>
               <td>{record.winningPercentage || "N/A"}</td>
