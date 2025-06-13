@@ -184,19 +184,21 @@ const Standings = () => {
         <tbody>
           {sortedStandings.map((record, index) => (
             <tr key={index}>
-              <td>
-  <div className="d-flex justify-content-between align-items-center">
+              <td className="text-center">
+  <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-1">
     <a
       href={teamURLS[record.team.name]}
       target="_blank"
       rel="noopener noreferrer"
-      style={{ textDecoration: "none", color: "inherit", minWidth: "150px" }}
+      style={{ textDecoration: "none", color: "inherit" }}
+      className="text-start"
     >
       {record.team.name}
     </a>
     <Button
       variant="outline-light"
       size="sm"
+      className="mt-1 mt-sm-0"
       onClick={() => {
         const teamId = record.team?.id;
         if (!teamId) {
@@ -248,19 +250,39 @@ const Standings = () => {
           <tbody>
             {divisionStandings.map((record, index) => (
               <tr key={index}>
-                <td>
-                  {record.team?.name && teamURLS[record.team.name] ? (
-                    <a
-                      href={teamURLS[record.team.name]}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ textDecoration: "none", color: "inherit" }}
+                <td className="text-center">
+                  <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-1">
+                    {record.team?.name && teamURLS[record.team.name] ? (
+                      <a
+                        href={teamURLS[record.team.name]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: "none", color: "inherit" }}
+                        className="text-start"
+                      >
+                        {record.team.name}
+                      </a>
+                    ) : (
+                      <span className="text-start">
+                        {record.team?.name || "N/A"}
+                      </span>
+                    )}
+                    <Button
+                      variant="outline-light"
+                      size="sm"
+                      className="mt-1 mt-sm-0"
+                      onClick={() => {
+                        const teamId = record.team?.id;
+                        if (!teamId) {
+                          console.error("Team ID not available");
+                          return;
+                        }
+                        navigate(`/team/${teamId}`);
+                      }}
                     >
-                      {record.team.name}
-                    </a>
-                  ) : (
-                    record.team?.name || "N/A"
-                  )}
+                      Stats
+                    </Button>
+                  </div>
                 </td>
                 <td>{record.wins || "N/A"}</td>
                 <td>{record.losses || "N/A"}</td>

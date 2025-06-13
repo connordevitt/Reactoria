@@ -1,6 +1,6 @@
 //Teampage.jsx display a team dynamically to show team data. 
 
-import React from "react";
+import React, { use } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
@@ -10,8 +10,17 @@ import "aos/dist/aos.css";
 const Teampage = () => {
   const { teamId } = useParams();
   const [team, setTeam] = useState(null);
+  const [recentGames, setRecentGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+
+  const end = new Date();
+  const start = new Date();
+  start.setDate(end.getDate() - 7);
+  // helper needed for good date formating
+  const fmt = (d) => d.toISOString().slice(0, 10);
+  
     useEffect(() => {
     const fetchTeamData = async () => {
         console.log('TeamID from params:', teamId);
@@ -40,9 +49,47 @@ const Teampage = () => {
             setLoading(false);
         }
     };
-
     fetchTeamData();
     }, [teamId]);
+   
+
+
+
+    useEffect(() => {
+      if (!teamId) return;
+
+      const fetchRecentGames = async () => {
+        try {
+          const url = `https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId=${teamId}&startDate=${fmt(start)}&endDate=${fmt(end)}&hydrate=lineup,decisions`;
+          console.log('Fetching games with URL:', url);
+          
+          const resp = await fetch(url);
+          if (!resp.ok) {
+            throw new Error(`Failed to fetch games: ${resp.status}`);
+          }
+          
+          const json = await resp.json();
+          console.log('Full API Response:', JSON.stringify(json, null, 2));
+          
+          if (!json.dates) {
+            throw new Error('No dates data in response');
+          }
+          
+          // Log the first game's structure if available
+          if (json.dates[0]?.games?.[0]) {
+            console.log('Sample Game Structure:', JSON.stringify(json.dates[0].games[0], null, 2));
+          }
+          
+          const games = json.dates.flatMap(d => d.games || []);
+          setRecentGames(games);
+        } catch (error) {
+          console.error('Error fetching recent games:', error);
+          setError(error.message);
+        }
+      };
+      fetchRecentGames();
+    }, [teamId, start, end]);
+
 
     if (loading) return <div className="text-white text-center">Loading...</div>;
     if (error) return <div className="text-white text-center">Error: {error}</div>;
@@ -73,6 +120,16 @@ const Teampage = () => {
                     <li className="mb-2">Venue: {team.venue?.name || "N/A"}</li>
                     <li className="mb-2">Location: {team.locationName || "N/A"}</li>
                     <li className="mb-2">First Year: {team.firstYearOfPlay || "N/A"}</li>
+                  </ul>
+                </div>
+                <div className="col-11">
+                  <h4 className="border-bottom pb-2 mb-3">Recent Games</h4>
+                  <ul className="list-unstyled">
+                    {recentGames.map((game) => (
+                      <li key={game.gamePk} className="mb-2">
+                        {game.teams?.home?.team?.name || 'TBD'} vs. {game.teams?.away?.team?.name || 'TBD'}
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
