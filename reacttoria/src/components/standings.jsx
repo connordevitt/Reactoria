@@ -22,7 +22,7 @@ const teamURLS = {
   "Houston Astros": "https://www.mlb.com/astros/",
   "Los Angeles Angels": "https://www.mlb.com/angels/",
   "Texas Rangers": "https://www.mlb.com/rangers/",
-  "Oakland Athletics": "https://www.mlb.com/athletics/",
+  "Athletics": "https://www.mlb.com/athletics/",
   "St. Louis Cardinals": "https://www.mlb.com/cardinals/",
   "Milwaukee Brewers": "https://www.mlb.com/brewers/",
   "Chicago Cubs": "https://www.mlb.com/cubs/",
@@ -90,9 +90,8 @@ const Standings = () => {
   const navigate = useNavigate();
   const [alStandings, setALStandings] = useState([]);
   const [nlStandings, setNLStandings] = useState([]);
-  const [view, setView] = useState("League"); // "League" or "Division"
+  const [view, setView] = useState(() => localStorage.getItem("standingsView") || "League");
   const [loading, setLoading] = useState(true);
-  console.log("Standings data:", Standings);
 
   /* const divisionNameMap = {
     "AL Central": "American League Central",
@@ -109,13 +108,11 @@ const Standings = () => {
         const response = await axios.get(
           "https://statsapi.mlb.com/api/v1/standings?leagueId=103"
         );
-        console.log("AL Standings API Response:", response.data.records);
         setALStandings(response.data.records);
 
         const nlResponse = await axios.get(
           "https://statsapi.mlb.com/api/v1/standings?leagueId=104"
         );
-        console.log("NL Standings API Response:", nlResponse.data.records);
         setNLStandings(nlResponse.data.records);
       } catch (error) {
         console.error("Error fetching standings:", error);
@@ -124,6 +121,11 @@ const Standings = () => {
 
     fetchStandings();
   }, []);
+
+  const handleSetView = (newView) => {
+    setView(newView);
+    localStorage.setItem('standingsView', newView);
+  }
 
   const sortLeagueStandings = (standings) => {
     return standings
@@ -145,11 +147,6 @@ const Standings = () => {
 
   const getDivisionStandings = (standings, divisionName) => {
     const teamsInDivision = divisionTeams[divisionName];
-    console.log(
-      `Filtering for teams in division: ${divisionName}`,
-      teamsInDivision
-    );
-
     return standings.flatMap((division) => {
       if (!Array.isArray(division.teamRecords)) {
         console.warn("Missing or invalid teamRecords for division:", division);
@@ -182,42 +179,50 @@ const Standings = () => {
           </tr>
         </thead>
         <tbody>
-          {sortedStandings.map((record, index) => (
-            <tr key={index}>
-              <td className="text-center">
-  <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-1">
-    <a
-      href={teamURLS[record.team.name]}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{ textDecoration: "none", color: "inherit" }}
-      className="text-start"
-    >
-      {record.team.name}
-    </a>
-    <Button
-      variant="outline-light"
-      size="sm"
-      className="mt-1 mt-sm-0"
-      onClick={() => {
-        const teamId = record.team?.id;
-        if (!teamId) {
-          console.error("Team ID not available");
-          return;
-        }
-        navigate(`/team/${teamId}`);
-      }}
-    >
-      Stats
-    </Button>
-  </div>
-</td>
-              <td>{record.wins || "N/A"}</td>
-              <td>{record.losses || "N/A"}</td>
-              <td>{record.winningPercentage || "N/A"}</td>
-              <td>{record.gamesBack || "N/A"}</td>
-            </tr>
-          ))}
+          {sortedStandings.map((record, index) => {
+            return (
+              <tr key={index}>
+                <td>
+                  {record.team?.name && teamURLS[record.team.name] ? (
+                    <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center">
+                      <a
+                        href={teamURLS[record.team.name]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        {record.team.name}
+                      </a>
+                      <Button
+                        variant="outline-light"
+                        className="mt-2 mt-md-0 ms-md-auto"
+                        size="sm"
+                        onClick={() => {
+                          const teamId = record.team?.id;
+                          if (!teamId) {
+                            console.error(
+                              "Team ID not available for:",
+                              record.team?.name
+                            );
+                            return;
+                          }
+                          navigate(`/team/${teamId}`);
+                        }}
+                      >
+                        Stats
+                      </Button>
+                    </div>
+                  ) : (
+                    record.team?.name || "N/A"
+                  )}
+                </td>
+                <td>{record.wins || "N/A"}</td>
+                <td>{record.losses || "N/A"}</td>
+                <td>{record.winningPercentage || "N/A"}</td>
+                <td>{record.gamesBack || "N/A"}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
     );
@@ -250,39 +255,39 @@ const Standings = () => {
           <tbody>
             {divisionStandings.map((record, index) => (
               <tr key={index}>
-                <td className="text-center">
-                  <div className="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-1">
-                    {record.team?.name && teamURLS[record.team.name] ? (
+                <td>
+                  {record.team?.name && teamURLS[record.team.name] ? (
+                    <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center">
                       <a
                         href={teamURLS[record.team.name]}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ textDecoration: "none", color: "inherit" }}
-                        className="text-start"
                       >
                         {record.team.name}
                       </a>
-                    ) : (
-                      <span className="text-start">
-                        {record.team?.name || "N/A"}
-                      </span>
-                    )}
-                    <Button
-                      variant="outline-light"
-                      size="sm"
-                      className="mt-1 mt-sm-0"
-                      onClick={() => {
-                        const teamId = record.team?.id;
-                        if (!teamId) {
-                          console.error("Team ID not available");
-                          return;
-                        }
-                        navigate(`/team/${teamId}`);
-                      }}
-                    >
-                      Stats
-                    </Button>
-                  </div>
+                      <Button
+                        variant="outline-light"
+                        className="mt-2 mt-md-0 ms-md-auto"
+                        size="sm"
+                        onClick={() => {
+                          const teamId = record.team?.id;
+                          if (!teamId) {
+                            console.error(
+                              "Team ID not available for:",
+                              record.team?.name
+                            );
+                            return;
+                          }
+                          navigate(`/team/${teamId}`);
+                        }}
+                      >
+                        Stats
+                      </Button>
+                    </div>
+                  ) : (
+                    record.team?.name || "N/A"
+                  )}
                 </td>
                 <td>{record.wins || "N/A"}</td>
                 <td>{record.losses || "N/A"}</td>
@@ -306,10 +311,10 @@ const Standings = () => {
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item onClick={() => setView("League")}>
+          <Dropdown.Item onClick={() => handleSetView("League")}>
             League Standings
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => setView("Division")}>
+          <Dropdown.Item onClick={() => handleSetView("Division")}>
             Division Standings
           </Dropdown.Item>
         </Dropdown.Menu>
