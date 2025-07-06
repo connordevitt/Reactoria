@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://connordevitt.github.io/Reactoria/",
   "dependencies": {
+    "@capacitor/ios": "^7.4.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -45,6 +46,8 @@
     ]
   },
   "devDependencies": {
+    "@capacitor/cli": "^7.4.1",
+    "@capacitor/core": "^7.4.1",
     "gh-pages": "^6.3.0"
   }
 }
