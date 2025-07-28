@@ -1,70 +1,81 @@
-# Getting Started with Create React App
+# Reactoria - MLB Stats App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based web application for viewing MLB team statistics and standings, now available as an iPhone app!
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- View MLB team standings
+- Browse team rosters
+- Check recent games
+- Responsive design for mobile and desktop
+- Native iOS app support
 
-### `npm start`
+## Development
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Web App
+```bash
+npm start          
+npm run build      
+npm run deploy     
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### iOS App
+```bash
+npm run ios       
+npm run ios:build  
+npm run ios:run    
+npm run ios:serve  
+```
 
-### `npm test`
+## iOS App Setup
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
+- macOS with Xcode installed
+- iOS Simulator or physical iOS device
+- CocoaPods installed (`sudo gem install cocoapods`)
 
-### `npm run build`
+### Building for iOS
+1. Build the React app: `npm run build`
+2. Sync with iOS: `npm run ios:build`
+3. Open in Xcode: `npm run ios`
+4. Select your target device/simulator
+5. Build and run!
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Running on Device
+1. Connect your iPhone via USB
+2. Open Xcode and select your device
+3. Sign the app with your Apple Developer account
+4. Build and run
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Project Structure
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+reacttoria/
+├── src/                   
+│   ├── components/         
+│   ├── pages/             
+│   └── App.js            
+├── ios/                   
+│   └── App/              
+├── public/               
+└── capacitor.config.ts   
+```
 
-### `npm run eject`
+## Technologies Used
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- React 19
+- React Router DOM
+- Bootstrap 5
+- Capacitor (iOS)
+- MLB Stats API
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## API
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+This app uses the official MLB Stats API to fetch:
+- Team standings
+- Team rosters
+- Recent games
+- Team information
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## License
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MIT License

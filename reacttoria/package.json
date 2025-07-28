@@ -25,7 +25,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "ios": "npm run build && npx cap sync ios && npx cap open ios",
+    "ios:build": "npm run build && npx cap sync ios",
+    "ios:run": "npx cap run ios",
+    "ios:serve": "npx cap run ios --livereload --external"
   },
   "eslintConfig": {
     "extends": [

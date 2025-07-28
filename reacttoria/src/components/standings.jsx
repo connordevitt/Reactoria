@@ -91,7 +91,6 @@ const Standings = () => {
   const [alStandings, setALStandings] = useState([]);
   const [nlStandings, setNLStandings] = useState([]);
   const [view, setView] = useState("League"); // "League" or "Division"
-  const [loading, setLoading] = useState(true);
   console.log("Standings data:", Standings);
 
   /* const divisionNameMap = {
