@@ -1,8 +1,7 @@
 //Teampage.jsx display a team dynamically to show team data. 
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { Button, Tabs, Tab } from "react-bootstrap";
 
 const Teampage = () => {
@@ -14,11 +13,33 @@ const Teampage = () => {
   const [roster, setRoster] = useState([]);
   const [rosterLoading, setRosterLoading] = useState(false);
   const [rosterError, setRosterError] = useState(null);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const [playerStats, setPlayerStats] = useState(null);
+  const [statsLoading, setStatsLoading] = useState(false);
+  const [statsError, setStatsError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
-
-
-
+  const handlePlayerClick = async (playerId) => {
+    setSelectedPlayer(playerId);
+    setStatsLoading(true);
+    setStatsError(null);
+    setPlayerStats(null);
+    setIsModalOpen(true);
+    try {
+      const year = new Date().getFullYear();
+      const response = await fetch(
+        `https://statsapi.mlb.com/api/v1/people/${playerId}/stats?stats=season&season=${year}`
+      );
+      if (!response.ok) throw new Error('Failed to fetch player stats');
+      const data = await response.json();
+      setPlayerStats(data.stats?.[0] || null);
+    } catch (err) {
+      setStatsError(err.message);
+    } finally {
+      setStatsLoading(false);
+    }
+  };
 
 
   useEffect(() => {
@@ -114,6 +135,13 @@ const Teampage = () => {
       
     });
   }, [teamId]);
+
+
+  useEffect(() => {
+    if (playerStats) {
+      console.log('Player Stats:', playerStats);
+    }
+  }, [playerStats]);
 
 
   if (loading) return <div className="text-white text-center">Loading...</div>;
@@ -268,7 +296,9 @@ const Teampage = () => {
                                           </div>
                                         </div>
                                         <div className="flex-grow-1">
-                                          <h6 className="mb-1 fw-semibold" style={{ fontSize: '0.95rem' }}>
+                                          <h6 className="mb-1 fw-semibold" style={{ fontSize: '0.95rem', cursor: 'pointer', color: '#4fc3f7', textDecoration: 'underline' }}
+                                            onClick={() => handlePlayerClick(player.person.id)}
+                                          >
                                             {player.person.fullName}
                                           </h6>
                                           <small className="text-white">
@@ -291,6 +321,32 @@ const Teampage = () => {
           </div>
         </div>
       </div>
+      {/* Player Stats Modal */}
+      {isModalOpen && (
+        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'auto' }}>
+          <div className="modal-content" style={{ position: 'relative', backgroundColor: '#333', padding: '20px', borderRadius: '8px', maxWidth: '60%', maxHeight: '80vh', overflowY: 'auto', color: '#fff' }}>
+            <button onClick={() => setIsModalOpen(false)} style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', fontSize: '2rem', cursor: 'pointer', color: '#fff' }}>&times;</button>
+            <h4>Player Stats</h4>
+            {statsLoading && <div>Loading player stats...</div>}
+            {statsError && <div className="alert alert-danger">Error: {statsError}</div>}
+            {playerStats && playerStats.splits && playerStats.splits.length > 0 ? (
+              <div>
+                <h6>Season: {playerStats.splits[0].season}</h6>
+                <ul className="list-group list-group-flush">
+                  {Object.entries(playerStats.splits[0].stat).map(([key, value]) => (
+                    <li key={key} className="list-group-item d-flex justify-content-between align-items-center" style={{ backgroundColor: '#444', color: '#fff' }}>
+                      <span style={{ textTransform: 'capitalize' }}>{key.replace(/([A-Z])/g, ' $1')}</span>
+                      <span className="fw-bold">{value}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : !statsLoading && !statsError ? (
+              <div>No stats available for this player.</div>
+            ) : null}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
