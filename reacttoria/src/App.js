@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import NavBar from './components/navbar';
 import LeagueStandings from './pages/leaguestandings';
 import Teampage from './pages/Teampage';
-import Landing from './pages/landing'; // Import the new Landing page
+import Landing from './pages/landing'; 
 import LazyLoadSpinner from './components/lazyload'; 
 import React, { Suspense } from 'react';
 
