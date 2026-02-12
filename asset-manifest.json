@@ -1,20 +1,19 @@
 {
   "files": {
-    "main.css": "/Reactoria/static/css/main.29b3024c.css",
-    "main.js": "/Reactoria/static/js/main.c4b440e1.js",
-    "static/js/516.c2aa2a5e.chunk.js": "/Reactoria/static/js/516.c2aa2a5e.chunk.js",
-    "static/js/453.44308f28.chunk.js": "/Reactoria/static/js/453.44308f28.chunk.js",
-    "static/js/795.c357186d.chunk.js": "/Reactoria/static/js/795.c357186d.chunk.js",
-    "static/media/wrigley3.jpg": "/Reactoria/static/media/wrigley3.6c5869263b2db9c160c4.jpg",
+    "main.css": "/Reactoria/static/css/main.d9b529ab.css",
+    "main.js": "/Reactoria/static/js/main.2f931217.js",
+    "static/js/516.3453913a.chunk.js": "/Reactoria/static/js/516.3453913a.chunk.js",
+    "static/js/453.6faa7309.chunk.js": "/Reactoria/static/js/453.6faa7309.chunk.js",
+    "static/js/722.2efee81a.chunk.js": "/Reactoria/static/js/722.2efee81a.chunk.js",
     "index.html": "/Reactoria/index.html",
-    "main.29b3024c.css.map": "/Reactoria/static/css/main.29b3024c.css.map",
-    "main.c4b440e1.js.map": "/Reactoria/static/js/main.c4b440e1.js.map",
-    "516.c2aa2a5e.chunk.js.map": "/Reactoria/static/js/516.c2aa2a5e.chunk.js.map",
-    "453.44308f28.chunk.js.map": "/Reactoria/static/js/453.44308f28.chunk.js.map",
-    "795.c357186d.chunk.js.map": "/Reactoria/static/js/795.c357186d.chunk.js.map"
+    "main.d9b529ab.css.map": "/Reactoria/static/css/main.d9b529ab.css.map",
+    "main.2f931217.js.map": "/Reactoria/static/js/main.2f931217.js.map",
+    "516.3453913a.chunk.js.map": "/Reactoria/static/js/516.3453913a.chunk.js.map",
+    "453.6faa7309.chunk.js.map": "/Reactoria/static/js/453.6faa7309.chunk.js.map",
+    "722.2efee81a.chunk.js.map": "/Reactoria/static/js/722.2efee81a.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.29b3024c.css",
-    "static/js/main.c4b440e1.js"
+    "static/css/main.d9b529ab.css",
+    "static/js/main.2f931217.js"
   ]
 }
