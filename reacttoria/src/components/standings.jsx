@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Table from "react-bootstrap/Table";
-import Dropdown from "react-bootstrap/Dropdown";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { useNavigate } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { TrophyIcon, CalendarIcon } from '@heroicons/react/24/outline';
 
 const teamURLS = {
   "New York Yankees": "https://www.mlb.com/yankees/",
@@ -40,81 +36,23 @@ const teamURLS = {
   "Arizona Diamondbacks": "https://www.mlb.com/diamondbacks/",
 };
 
-// Go Yankees!
-const divisionTeams = {
-  "AL Central": [
-    "Cleveland Guardians",
-    "Detroit Tigers",
-    "Kansas City Royals",
-    "Minnesota Twins",
-    "Chicago White Sox",
-  ],
-  "AL East": [
-    "Tampa Bay Rays",
-    "Toronto Blue Jays",
-    "Baltimore Orioles",
-    "New York Yankees",
-    "Boston Red Sox",
-  ],
-  "AL West": [
-    "Seattle Mariners",
-    "Houston Astros",
-    "Los Angeles Angels",
-    "Texas Rangers",
-    "Oakland Athletics",
-  ],
-  "NL Central": [
-    "St. Louis Cardinals",
-    "Milwaukee Brewers",
-    "Chicago Cubs",
-    "Cincinnati Reds",
-    "Pittsburgh Pirates",
-  ],
-  "NL East": [
-    "Miami Marlins",
-    "Washington Nationals",
-    "Atlanta Braves",
-    "New York Mets",
-    "Philadelphia Phillies",
-  ],
-  "NL West": [
-    "San Diego Padres",
-    "Colorado Rockies",
-    "San Francisco Giants",
-    "Los Angeles Dodgers",
-    "Arizona Diamondbacks",
-  ],
-};
-
 const Standings = () => {
   const navigate = useNavigate();
   const [alStandings, setALStandings] = useState([]);
   const [nlStandings, setNLStandings] = useState([]);
-  const [view, setView] = useState("League"); // "League" or "Division"
-  console.log("Standings data:", Standings);
+  const [view, setView] = useState("League");
 
-  /* const divisionNameMap = {
-    "AL Central": "American League Central",
-    "AL East": "American League East",
-    "AL West": "American League West",
-    "NL Central": "National League Central",
-    "NL East": "National League East",
-    "NL West": "National League West",
-  };
-  */
   useEffect(() => {
     const fetchStandings = async () => {
       try {
         const response = await axios.get(
           "https://statsapi.mlb.com/api/v1/standings?leagueId=103"
         );
-        console.log("AL Standings API Response:", response.data.records);
         setALStandings(response.data.records);
 
         const nlResponse = await axios.get(
           "https://statsapi.mlb.com/api/v1/standings?leagueId=104"
         );
-        console.log("NL Standings API Response:", nlResponse.data.records);
         setNLStandings(nlResponse.data.records);
       } catch (error) {
         console.error("Error fetching standings:", error);
@@ -143,20 +81,31 @@ const Standings = () => {
   };
 
   const getDivisionStandings = (standings, divisionName) => {
-    const teamsInDivision = divisionTeams[divisionName];
-    console.log(
-      `Filtering for teams in division: ${divisionName}`,
-      teamsInDivision
-    );
+    const divisionMap = {
+      "AL East": 201,
+      "AL Central": 202,
+      "AL West": 200,
+      "NL East": 204,
+      "NL Central": 205,
+      "NL West": 203
+    };
+
+    const targetDivisionId = divisionMap[divisionName];
+    if (!targetDivisionId) {
+      console.warn(`Unknown division: ${divisionName}`);
+      return [];
+    }
 
     return standings.flatMap((division) => {
       if (!Array.isArray(division.teamRecords)) {
         console.warn("Missing or invalid teamRecords for division:", division);
         return [];
       }
-      return division.teamRecords.filter((teamRecord) =>
-        teamsInDivision.includes(teamRecord.team?.name)
-      );
+
+      if (division.division?.id === targetDivisionId) {
+        return division.teamRecords;
+      }
+      return [];
     });
   };
 
@@ -165,62 +114,150 @@ const Standings = () => {
 
     if (!sortedStandings || sortedStandings.length === 0) {
       return (
-        <p className="text-center text-white">No standings data available</p>
+        <div className="text-center py-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-dark-800 rounded-full mb-4">
+            <TrophyIcon className="h-8 w-8 text-dark-500" />
+          </div>
+          <p className="text-dark-400">No standings data available</p>
+        </div>
       );
     }
 
     return (
-      <Table striped bordered hover responsive>
-        <thead>
-          <tr>
-            <th className="Team-name">Team</th>
-            <th className="stat-col">W</th>
-            <th className="stat-col">L</th>
-            <th className="stat-col">Win %</th>
-            <th className="stat-col">GB</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedStandings.map((record, index) => {
-            
-            console.log(`Record for team: ${record.team?.name}, ID: ${record.team?.id}, record`);
-
-            return (
-              <tr key={index}>
-                <td className="team-cell">
-                  <div className="d-flex d-md-flex flex-column flex-md-row align-items-start align-items-md-center w-100">
+      <>
+        {/* Mobile Card Layout */}
+        <div className="sm:hidden space-y-3">
+          {sortedStandings.map((record, index) => (
+            <div
+              key={index}
+              className="bg-dark-800/50 rounded-lg p-3 border border-dark-700"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3 flex-1 min-w-0">
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 bg-primary-500/20 rounded-lg flex items-center justify-center border border-primary-500/30">
+                      <img
+                        src={`https://www.mlbstatic.com/team-logos/${record.team?.id}.svg`}
+                        alt={record.team?.name}
+                        className="w-6 h-6 object-contain"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="min-w-0 flex-1">
                     <a
                       href={teamURLS[record.team.name]}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ textDecoration: "none", color: "inherit" }}
-                      className="team-link flex-grow-1"
+                      className="text-white font-medium hover:text-primary-400 transition-colors text-sm block truncate"
                     >
                       {record.team.name}
                     </a>
-                    <Button
-                      variant="outline-light"
-                      size="sm"
-                      className="mt-2 mt-md-0 ms-md-auto"
-                      onClick={() => {
-                        const teamId = record.team?.id;
-                        if (!teamId) return;
-                        navigate(`/team/${teamId}`);
-                      }}
-                    >
-                      Stats
-                    </Button>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <span className="text-xs font-semibold text-white">{record.wins}-{record.losses}</span>
+                      <span className={`inline-flex px-1.5 py-0.5 rounded text-xs font-medium ${parseFloat(record.winningPercentage) > 0.600
+                          ? 'bg-green-500/20 text-green-400'
+                          : parseFloat(record.winningPercentage) > 0.500
+                            ? 'bg-yellow-500/20 text-yellow-400'
+                            : 'bg-red-500/20 text-red-400'
+                        }`}>
+                        {record.winningPercentage}
+                      </span>
+                    </div>
                   </div>
-                </td>
-                <td>{record.wins || "N/A"}</td>
-                <td>{record.losses || "N/A"}</td>
-                <td>{record.winningPercentage || "N/A"}</td>
-                <td>{record.gamesBack || "N/A"}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+                </div>
+                <button
+                  onClick={() => {
+                    const teamId = record.team?.id;
+                    if (!teamId) return;
+                    navigate(`/team/${teamId}`);
+                  }}
+                  className="btn-outline text-xs px-3 py-1.5 ml-2 flex-shrink-0"
+                >
+                  Stats
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table Layout */}
+        <div className="hidden sm:block">
+          <div className="overflow-hidden rounded-xl border border-dark-700">
+            <table className="standings-table">
+              <thead>
+                <tr>
+                  <th className="text-left">Team</th>
+                  <th className="w-16 text-center">W</th>
+                  <th className="w-16 text-center">L</th>
+                  <th className="w-20 text-center hidden md:table-cell">Win %</th>
+                  <th className="w-16 text-center hidden lg:table-cell">GB</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedStandings.map((record, index) => (
+                  <tr key={index} className="group hover:bg-dark-800/50 transition-colors">
+                    <td className="py-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="flex-shrink-0">
+                          <div className="w-10 h-10 bg-primary-500/20 rounded-lg flex items-center justify-center border border-primary-500/30">
+                            <img
+                              src={`https://www.mlbstatic.com/team-logos/${record.team?.id}.svg`}
+                              alt={record.team?.name}
+                              className="w-6 h-6 object-contain"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <div className="min-w-0">
+                          <a
+                            href={teamURLS[record.team.name]}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-white font-medium hover:text-primary-400 transition-colors block truncate"
+                          >
+                            {record.team.name}
+                          </a>
+                          <div className="text-xs text-dark-500 hidden md:block">
+                            {record.team?.division?.name}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => {
+                            const teamId = record.team?.id;
+                            if (!teamId) return;
+                            navigate(`/team/${teamId}`);
+                          }}
+                          className="btn-outline text-xs px-3 py-1 sm:text-sm sm:px-4 sm:py-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap"
+                        >
+                          Stats
+                        </button>
+                      </div>
+                    </td>
+                    <td className="text-center font-semibold text-white">{record.wins || "N/A"}</td>
+                    <td className="text-center text-dark-400">{record.losses || "N/A"}</td>
+                    <td className="text-center hidden md:table-cell">
+                      <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${parseFloat(record.winningPercentage) > 0.600
+                          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                          : parseFloat(record.winningPercentage) > 0.500
+                            ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                            : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                        }`}>
+                        {record.winningPercentage || "N/A"}
+                      </span>
+                    </td>
+                    <td className="text-center text-dark-400 hidden lg:table-cell">{record.gamesBack || "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </>
     );
   };
 
@@ -229,115 +266,229 @@ const Standings = () => {
 
     if (!divisionStandings || divisionStandings.length === 0) {
       return (
-        <p className="text-center text-white">
-          No standings data available for: {divisionName}.
-        </p>
+        <div className="text-center py-6">
+          <p className="text-dark-400">
+            No standings data available for: {divisionName}
+          </p>
+        </div>
       );
     }
 
     return (
-      <div>
-        <h4 className="text-center text-white">{divisionName}</h4>
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th className="Team-name">Team</th>
-              <th className="stat-col">W</th>
-              <th className="stat-col">L</th>
-              <th className="stat-col">Win %</th>
-              <th className="stat-col">GB</th>
-            </tr>
-          </thead>
-          <tbody>
-            {divisionStandings.map((record, index) => (
-              <tr key={index}>
-                <td className="team-cell">
-                  <div className="d-flex d-md-flex flex-column flex-md-row align-items-start align-items-md-center w-100">
+      <div className="mb-6 sm:mb-8">
+        <div className="flex items-center mb-3 sm:mb-4">
+          <TrophyIcon className="h-5 w-5 text-primary-400 mr-2" />
+          <h3 className="text-lg sm:text-xl font-bold text-white">{divisionName}</h3>
+        </div>
+
+        {/* Mobile Card Layout */}
+        <div className="sm:hidden space-y-2">
+          {divisionStandings.map((record, index) => (
+            <div
+              key={index}
+              className="bg-dark-800/50 rounded-lg p-3 border border-dark-700"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3 flex-1 min-w-0">
+                  <div className="flex-shrink-0">
+                    <div className="w-9 h-9 bg-primary-500/20 rounded-lg flex items-center justify-center border border-primary-500/30">
+                      <img
+                        src={`https://www.mlbstatic.com/team-logos/${record.team?.id}.svg`}
+                        alt={record.team?.name}
+                        className="w-5 h-5 object-contain"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="min-w-0 flex-1">
                     <a
                       href={teamURLS[record.team.name]}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ textDecoration: "none", color: "inherit" }}
-                      className="team-link flex-grow-1"
+                      className="text-white font-medium hover:text-primary-400 transition-colors text-sm block truncate"
                     >
                       {record.team.name}
                     </a>
-                    <Button
-                      variant="outline-light"
-                      size="sm"
-                      className="mt-2 mt-md-0 ms-md-auto"
-                      onClick={() => {
-                        const teamId = record.team?.id;
-                        if (!teamId) return;
-                        navigate(`/team/${teamId}`);
-                      }}
-                    >
-                      Stats
-                    </Button>
+                    <div className="flex items-center space-x-2 mt-0.5">
+                      <span className="text-xs font-semibold text-white">{record.wins}-{record.losses}</span>
+                      <span className="text-xs text-dark-500">GB: {record.gamesBack || "-"}</span>
+                    </div>
                   </div>
-                </td>
-                <td>{record.wins || "N/A"}</td>
-                <td>{record.losses || "N/A"}</td>
-                <td>{record.winningPercentage || "N/A"}</td>
-                <td>{record.gamesBack || "N/A"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <hr className="text-white" />
+                </div>
+                <button
+                  onClick={() => {
+                    const teamId = record.team?.id;
+                    if (!teamId) return;
+                    navigate(`/team/${teamId}`);
+                  }}
+                  className="btn-outline text-xs px-2.5 py-1 ml-2 flex-shrink-0"
+                >
+                  Stats
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop Table Layout */}
+        <div className="hidden sm:block">
+          <div className="overflow-hidden rounded-xl border border-dark-700">
+            <table className="standings-table">
+              <thead>
+                <tr>
+                  <th className="text-left">Team</th>
+                  <th className="w-16 text-center">W</th>
+                  <th className="w-16 text-center">L</th>
+                  <th className="w-20 text-center hidden md:table-cell">Win %</th>
+                  <th className="w-16 text-center">GB</th>
+                </tr>
+              </thead>
+              <tbody>
+                {divisionStandings.map((record, index) => (
+                  <tr key={index} className="group hover:bg-dark-800/50 transition-colors">
+                    <td className="py-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="flex-shrink-0">
+                          <div className="w-10 h-10 bg-primary-500/20 rounded-lg flex items-center justify-center border border-primary-500/30">
+                            <img
+                              src={`https://www.mlbstatic.com/team-logos/${record.team?.id}.svg`}
+                              alt={record.team?.name}
+                              className="w-6 h-6 object-contain"
+                              onError={(e) => {
+                                e.target.style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <a
+                          href={teamURLS[record.team.name]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-white font-medium hover:text-primary-400 transition-colors truncate"
+                        >
+                          {record.team.name}
+                        </a>
+                        <button
+                          onClick={() => {
+                            const teamId = record.team?.id;
+                            if (!teamId) return;
+                            navigate(`/team/${teamId}`);
+                          }}
+                          className="btn-outline text-xs px-3 py-1 sm:text-sm sm:px-4 sm:py-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap"
+                        >
+                          Stats
+                        </button>
+                      </div>
+                    </td>
+                    <td className="text-center font-semibold text-white">{record.wins || "N/A"}</td>
+                    <td className="text-center text-dark-400">{record.losses || "N/A"}</td>
+                    <td className="text-center hidden md:table-cell">
+                      <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${parseFloat(record.winningPercentage) > 0.600
+                          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                          : parseFloat(record.winningPercentage) > 0.500
+                            ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                            : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                        }`}>
+                        {record.winningPercentage || "N/A"}
+                      </span>
+                    </td>
+                    <td className="text-center text-dark-400">{record.gamesBack || "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     );
   };
+
   return (
-    <div>
-      <h2 className="text-center text-white">MLB 2025 Standings</h2>
+    <div className="min-h-screen bg-dark-900 pt-16 pb-8 sm:pb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
+            MLB 2025 Standings
+          </h1>
+          <p className="text-base sm:text-lg md:text-xl text-dark-400 mb-6 sm:mb-8">
+            Track your favorite teams journey to playoffs
+          </p>
 
-      <Dropdown className="mb-4 text-center">
-        <Dropdown.Toggle variant="dark" id="dropdown-basic" className="mt-5">
-          {view === "League" ? "League Standings" : "Division Standings"}
-        </Dropdown.Toggle>
+          {/* View Toggle */}
+          <div className="inline-flex rounded-lg border border-dark-700 bg-dark-800/50 p-1">
+            <button
+              onClick={() => setView("League")}
+              className={`px-3 sm:px-6 py-2 rounded-md font-medium transition-all text-sm sm:text-base ${view === "League"
+                  ? "bg-primary-600 text-white shadow-lg"
+                  : "text-dark-400 hover:text-white hover:bg-dark-700"
+                }`}
+            >
+              <div className="flex items-center space-x-1.5 sm:space-x-2">
+                <TrophyIcon className="h-4 w-4" />
+                <span className="hidden xs:inline">League</span>
+                <span className="xs:hidden">League</span>
+              </div>
+            </button>
+            <button
+              onClick={() => setView("Division")}
+              className={`px-3 sm:px-6 py-2 rounded-md font-medium transition-all text-sm sm:text-base ${view === "Division"
+                  ? "bg-primary-600 text-white shadow-lg"
+                  : "text-dark-400 hover:text-white hover:bg-dark-700"
+                }`}
+            >
+              <div className="flex items-center space-x-1.5 sm:space-x-2">
+                <CalendarIcon className="h-4 w-4" />
+                <span className="hidden xs:inline">Division</span>
+                <span className="xs:hidden">Division</span>
+              </div>
+            </button>
+          </div>
+        </div>
 
-        <Dropdown.Menu>
-          <Dropdown.Item onClick={() => setView("League")}>
-            League Standings
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => setView("Division")}>
-            Division Standings
-          </Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
+        {view === "League" ? (
+          <div className="space-y-8">
+            {/* American League */}
+            <div className="content-card">
+              <div className="p-6">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mr-4">
+                    <span className="text-white font-bold text-lg">AL</span>
+                  </div>
+                  <h2 className="text-2xl font-bold text-white">American League</h2>
+                </div>
+                {renderLeagueTable(alStandings)}
+              </div>
+            </div>
 
-      {view === "League" ? (
-        <>
-          {/* League Standings */}
-          <div className="card shadow-sm mb-4">
-            <div className="card-body">
-              <h3 className="text-center text-white">American League (AL)</h3>
-              {renderLeagueTable(alStandings)}
+            {/* National League */}
+            <div className="content-card">
+              <div className="p-6">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center mr-4">
+                    <span className="text-white font-bold text-lg">NL</span>
+                  </div>
+                  <h2 className="text-2xl font-bold text-white">National League</h2>
+                </div>
+                {renderLeagueTable(nlStandings)}
+              </div>
             </div>
           </div>
-          <div className="card shadow-sm">
-            <div className="card-body">
-              <h3 className="text-center text-white">National League (NL)</h3>
-              {renderLeagueTable(nlStandings)}
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          {/* Division Standings */}
-          <div className="card shadow-sm mb-4">
-            <div className="card-body">
-              {renderDivisionStandings("AL Central", alStandings)}
+        ) : (
+          <div className="content-card">
+            <div className="p-6">
               {renderDivisionStandings("AL East", alStandings)}
+              {renderDivisionStandings("AL Central", alStandings)}
               {renderDivisionStandings("AL West", alStandings)}
-              {renderDivisionStandings("NL Central", nlStandings)}
               {renderDivisionStandings("NL East", nlStandings)}
+              {renderDivisionStandings("NL Central", nlStandings)}
               {renderDivisionStandings("NL West", nlStandings)}
             </div>
           </div>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 };

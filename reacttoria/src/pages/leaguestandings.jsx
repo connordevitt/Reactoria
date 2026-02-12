@@ -1,20 +1,19 @@
-//leaguestandings.jsx
-import React, { useEffect } from "react";
-import { Modal, Button} from "react-bootstrap";
-import NavBar from "../components/navbar";
+import React, { useState, useEffect } from "react";
 import LazyLoadSpinner from "../components/lazyload";
 import { Suspense } from "react";
-import { useState } from "react";
-
+import { TrophyIcon } from '@heroicons/react/24/outline';
 
 const LazyStandings = React.lazy(() =>
     import("../components/standings")
   );
   
-  const LeagueStandings = () => {
+  const DODGERS_MODAL_KEY = "dodgers-splash-seen";
+
+const LeagueStandings = () => {
     const [showSpinner, setShowSpinner] = useState(false);
-    const [showSplashModal, setShowSplashModal] = useState(true);
-  
+    const [showSplashModal, setShowSplashModal] = useState(
+      () => !sessionStorage.getItem(DODGERS_MODAL_KEY)
+    );
   
     useEffect(() => {
       const timer = setTimeout(() => {
@@ -25,42 +24,41 @@ const LazyStandings = React.lazy(() =>
     }, []);
 
     const handleCloseModal = () => {
+      sessionStorage.setItem(DODGERS_MODAL_KEY, "true");
       setShowSplashModal(false);
     };
   
     return (
       <div>
-        <NavBar />
-
-        <Modal 
-          show={showSplashModal}
-          onHide={handleCloseModal}
-          centered
-          backdrop="static"
-          keyboard={true}
-          >
-
-            <Modal.Header className="bg-dark text-white border-0"> 
-              <Modal.Title className="w-100 text-center fw-bold border-bottom border-warning pb-2">
-                The Dodgers Won the 2025 World Series!
-              </Modal.Title>
-              </Modal.Header>
-
-              
-
-              <Modal.Body className="bg-dark text-white text-center">
-                <div className="mb-3">
-                  <h4>Congratulations to the Dodgers on their 2025 World Series Championship! It was a great first season for MLB Standings Tracker!</h4>
-                  <p className="bold">Thank you for using our tracker! We'll be back next season with better features and more data!</p>
+        {showSplashModal && (
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+            <div className="content-card max-w-lg w-full">
+              <div className="p-8 text-center">
+                <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <TrophyIcon className="h-8 w-8 text-white" />
                 </div>
-              </Modal.Body>
-
-              <Modal.Footer className=" bg-dark border-0 justify-content-center">
-                <Button variant="primary" onClick={handleCloseModal}>
+                <h2 className="text-3xl font-bold text-white mb-4">
+                  Dodgers Won 2025 World Series!
+                </h2>
+                <div className="text-dark-300 mb-6">
+                  <p className="text-lg mb-4">
+                    Congratulations to the Dodgers on their 2025 World Series Championship! 
+                    It was a great first season for MLB Standings Tracker!
+                  </p>
+                  <p className="font-medium">
+                    Thank you for using our tracker! We'll be back next season with better features and more data!
+                  </p>
+                </div>
+                <button
+                  onClick={handleCloseModal}
+                  className="btn-primary"
+                >
                   Close
-                </Button>
-              </Modal.Footer>
-          </Modal>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <Suspense fallback={showSpinner ? <LazyLoadSpinner /> : null}>
           <LazyStandings />

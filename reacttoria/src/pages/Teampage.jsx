@@ -1,8 +1,14 @@
-//Teampage.jsx display a team dynamically to show team data. 
+//Teampage.jsx display a team dynamically to show team data.
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Tabs, Tab } from "react-bootstrap";
+import {
+  ArrowLeftIcon,
+  UserIcon,
+  CalendarIcon,
+  ChartBarIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 
 const Teampage = () => {
   const { teamId } = useParams();
@@ -13,15 +19,15 @@ const Teampage = () => {
   const [roster, setRoster] = useState([]);
   const [rosterLoading, setRosterLoading] = useState(false);
   const [rosterError, setRosterError] = useState(null);
-  const [selectedPlayer, setSelectedPlayer] = useState(null);
+  // const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [playerStats, setPlayerStats] = useState(null);
   const [statsLoading, setStatsLoading] = useState(false);
   const [statsError, setStatsError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [activeTab, setActiveTab] = useState("overview");
 
   const handlePlayerClick = async (playerId) => {
-    setSelectedPlayer(playerId);
+    // setSelectedPlayer(playerId);
     setStatsLoading(true);
     setStatsError(null);
     setPlayerStats(null);
@@ -29,9 +35,9 @@ const Teampage = () => {
     try {
       const year = new Date().getFullYear();
       const response = await fetch(
-        `https://statsapi.mlb.com/api/v1/people/${playerId}/stats?stats=season&season=${year}`
+        `https://statsapi.mlb.com/api/v1/people/${playerId}/stats?stats=season&season=${year}`,
       );
-      if (!response.ok) throw new Error('Failed to fetch player stats');
+      if (!response.ok) throw new Error("Failed to fetch player stats");
       const data = await response.json();
       setPlayerStats(data.stats?.[0] || null);
     } catch (err) {
@@ -40,7 +46,6 @@ const Teampage = () => {
       setStatsLoading(false);
     }
   };
-
 
   useEffect(() => {
     const fetchTeamData = async () => {
@@ -54,7 +59,7 @@ const Teampage = () => {
       }
       try {
         const response = await fetch(
-          `https://statsapi.mlb.com/api/v1/teams/${teamId}`
+          `https://statsapi.mlb.com/api/v1/teams/${teamId}`,
         );
         if (!response.ok) {
           throw new Error("Team not found");
@@ -72,9 +77,6 @@ const Teampage = () => {
     };
     fetchTeamData();
   }, [teamId]);
-
-
-
 
   useEffect(() => {
     if (!teamId) return;
@@ -99,213 +101,305 @@ const Teampage = () => {
         // console.log('Full API Response:', JSON.stringify(json, null, 2));
 
         if (!json.dates) {
-          throw new Error('No dates data in response');
+          throw new Error("No dates data in response");
         }
 
-        
         // if (json.dates[0]?.games?.[0]) {
         //   console.log('Sample Game Structure:', JSON.stringify(json.dates[0].games[0], null, 2));
         // }
 
-        const games = json.dates.flatMap(d => d.games || []);
+        const games = json.dates.flatMap((d) => d.games || []);
         setRecentGames(games);
       } catch (error) {
-        console.error('Error fetching recent games:', error);
+        console.error("Error fetching recent games:", error);
         setError(error.message);
       }
     };
     fetchRecentGames();
   }, [teamId]);
 
-
   useEffect(() => {
-    if(!teamId) return
+    if (!teamId) return;
     setRoster([]);
     setRosterLoading(true);
     setRosterError(null);
 
     fetch(`https://statsapi.mlb.com/api/v1/teams/${teamId}/roster`)
-    .then(res => {
-      if(!res.ok) throw new Error("Failed to get the roster");
-      return res.json();
-    })
-    .then(data => {
-      setRoster(data.roster || []);
-      setRosterLoading(false);
-      
-    });
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to get the roster");
+        return res.json();
+      })
+      .then((data) => {
+        setRoster(data.roster || []);
+        setRosterLoading(false);
+      });
   }, [teamId]);
-
 
   useEffect(() => {
     if (playerStats) {
-      console.log('Player Stats:', playerStats);
+      console.log("Player Stats:", playerStats);
     }
   }, [playerStats]);
 
-
   if (loading) return <div className="text-white text-center">Loading...</div>;
-  if (error) return <div className="text-white text-center">Error: {error}</div>;
-  if (!team) return <div className="text-white text-center">No team data available</div>;
+  if (error)
+    return <div className="text-white text-center">Error: {error}</div>;
+  if (!team)
+    return <div className="text-white text-center">No team data available</div>;
 
   return (
-    <div className="bg-dark text-white min-vh-100">
-      <div className="container py-5 mt-5">
-        <div
-          className="card bg-secondary text-white shadow-lg mx-auto"
-          style={{ maxWidth: "600px" }}
+    <div className="min-h-screen bg-dark-900 py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Back Button */}
+        <button
+          onClick={() => window.history.back()}
+          className="mb-6 btn-secondary inline-flex items-center"
         >
-          <div className="card-header text-center bg-dark border-0">
-            <Button variant="outline-light" href="/Reactoria/leaguestandings">
-              Back to Standings
-            </Button>
+          <ArrowLeftIcon className="h-4 w-4 mr-2" />
+          Back to Standings
+        </button>
+
+        {/* Team Header */}
+        <div className="content-card mb-8 overflow-hidden">
+          <div className="bg-dark-800/50 p-8">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+              <div className="w-24 h-24 rounded-2xl flex items-center justify-center border border-dark-600 bg-gray-200 shadow-xl">
+                <div className="w-20 h-20 flex items-center justify-center">
+                  <img
+                    src={`https://www.mlbstatic.com/team-logos/${team.id}.svg`}
+                    alt={team.name}
+                    className="w-full h-full object-contain drop-shadow-md"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "flex";
+                    }}
+                  />
+                  <div className="hidden w-full h-full items-center justify-center">
+                    <span className="text-3xl font-bold text-primary-500">
+                      {team.name?.charAt(0)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="text-center sm:text-left">
+                <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
+                  {team.name}
+                </h1>
+                <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                  <span className="inline-flex px-3 py-1 rounded-full text-sm font-medium bg-primary-600/20 text-primary-400 border border-primary-500/30">
+                    {team.league?.name || "N/A"}
+                  </span>
+                  <span className="inline-flex px-3 py-1 rounded-full text-sm font-medium bg-dark-700 text-dark-300 border border-dark-600">
+                    {team.division?.name || "N/A"}
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="card-body p-4">
-            <Tabs defaultActiveKey="overview" id="team-tabs" className="mb-3">
-              <Tab eventKey="overview" title="Overview">
-                {/* Team Logo Placeholder */}
-                <div className="d-flex flex-column align-items-center mb-3">
-                  <div style={{
-                    width: 100,
-                    height: 100,
-                    borderRadius: '50%',
-                    background: '#23272b',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
-                    marginBottom: 16
-                  }}>
-                    <img src={`https://www.mlbstatic.com/team-logos/${team.id}.svg`} alt={team.name}
-                      style={{ width: 60, height: 60, objectFit: 'contain', opacity: 0.85 }}
-                    />
-                  </div>
-                  
-                  <h1 className="text-center mb-2 fw-bold" style={{ fontSize: '2.5rem', letterSpacing: 1 }}>{team.name}</h1>
-                  <div className="mb-3">
-                    <span className="badge bg-primary me-2" style={{ fontSize: '1rem' }}>{team.league?.name || 'N/A'}</span>
-                    <span className="badge bg-info text-dark" style={{ fontSize: '1rem' }}>{team.division?.name || 'N/A'}</span>
-                  </div>
-                </div>
-                <div className="row justify-content-center g-4">
-                  <div className="col-12 mb-4">
-                    <h6 className="border-bottom pb-2 mb-3 fw-semibold fs-6">Team Info</h6>
-                    <ul className="list-unstyled ps-2">
-                      <li className="mb-2">Venue: {team.venue?.name || "N/A"}</li>
-                      <li className="mb-2">Location: {team.locationName || "N/A"}</li>
-                      <li className="mb-2">First Year: {team.firstYearOfPlay || "N/A"}</li>
-                    </ul>
-                  </div>
-                  <div className="col-12">
-                    <h2 className="border-bottom pb-2 mb-3 fw-semibold">Recent Games</h2>
-                    <ul
-                      className="list-unstyled"
-                      style={{
-                        borderRadius: 12,
-                        padding: 16,
-                      }}
-                    >
-                      {recentGames.length === 0 && (
-                        <li className="mb-2 text-muted">No recent games found.</li>
-                      )}
-                      {recentGames.slice(0, 5).map((game) => (
-                        <li key={game.gamePk} className="mb-2">
-                          <span className="fw-bold">{game.teams?.home?.team?.name || 'TBD'}</span> vs. <span className="fw-bold">{game.teams?.away?.team?.name || 'TBD'}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </Tab>
-              <Tab eventKey="roster" title="Roster">
-                {rosterLoading && (
-                  <div className="text-center py-4">
-                    <div className="spinner-border text-primary" role="status">
-                      <span className="visually-hidden">Loading...</span>
+        </div>
+
+        {/* Tabs */}
+        <div className="glass rounded-xl border border-white/10">
+          <div className="border-b border-dark-700">
+            <nav className="flex space-x-1 p-1">
+              {["overview", "roster"].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all ${
+                    activeTab === tab
+                      ? "bg-primary-600 text-white shadow-lg"
+                      : "text-dark-400 hover:text-white hover:bg-dark-800/50"
+                  }`}
+                >
+                  {tab === "overview" ? (
+                    <>
+                      <ChartBarIcon className="h-5 w-5" />
+                      <span>Overview</span>
+                    </>
+                  ) : (
+                    <>
+                      <UserIcon className="h-5 w-5" />
+                      <span>Roster</span>
+                    </>
+                  )}
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          <div className="p-6">
+            {activeTab === "overview" && (
+              <div className="space-y-6">
+                {/* Team Info */}
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="content-card p-6">
+                    <div className="flex items-center mb-4">
+                      <div className="w-10 h-10 bg-primary-600/20 rounded-lg flex items-center justify-center mr-3">
+                        <UserIcon className="h-5 w-5 text-primary-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-white">
+                        Team Info
+                      </h3>
                     </div>
-                    <p className="mt-2 text-muted">Loading roster...</p>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-dark-500 text-sm">Venue</p>
+                        <p className="text-white font-medium">
+                          {team.venue?.name || "N/A"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-dark-500 text-sm">Location</p>
+                        <p className="text-white font-medium">
+                          {team.locationName || "N/A"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-dark-500 text-sm">First Year</p>
+                        <p className="text-white font-medium">
+                          {team.firstYearOfPlay || "N/A"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-2 content-card p-6">
+                    <div className="flex items-center mb-4">
+                      <div className="w-10 h-10 bg-primary-600/20 rounded-lg flex items-center justify-center mr-3">
+                        <CalendarIcon className="h-5 w-5 text-primary-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-white">
+                        Recent Games
+                      </h3>
+                    </div>
+                    <div className="space-y-2">
+                      {recentGames.length === 0 ? (
+                        <p className="text-dark-400">No recent games found.</p>
+                      ) : (
+                        recentGames.slice(0, 5).map((game) => (
+                          <div
+                            key={game.gamePk}
+                            className="flex justify-between items-center p-3 bg-dark-800/50 rounded-lg"
+                          >
+                            <span className="text-white font-medium">
+                              {game.teams?.home?.team?.name || "TBD"}
+                            </span>
+                            <span className="text-primary-400">vs</span>
+                            <span className="text-white font-medium">
+                              {game.teams?.away?.team?.name || "TBD"}
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "roster" && (
+              <div>
+                {rosterLoading && (
+                  <div className="text-center py-12">
+                    <div className="spinner mx-auto mb-4"></div>
+                    <p className="text-dark-400">Loading roster...</p>
                   </div>
                 )}
+
                 {rosterError && (
-                  <div className="alert alert-danger" role="alert">
-                    <i className="fas fa-exclamation-triangle me-2"></i>
-                    Error: {rosterError}
+                  <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                    <p className="text-red-400">Error: {rosterError}</p>
                   </div>
                 )}
-                {roster.length === 0 && !rosterLoading && !rosterError && (
-                  <div className="text-center py-4">
-                    <i className="fas fa-users fa-3x text-muted mb-3"></i>
-                    <p className="text-muted">No roster data found.</p>
+
+                {!rosterLoading && !rosterError && roster.length === 0 && (
+                  <div className="text-center py-12">
+                    <UserIcon className="h-16 w-16 text-dark-600 mx-auto mb-4" />
+                    <p className="text-dark-400">No roster data found.</p>
                   </div>
                 )}
+
                 {roster.length > 0 && (
-                  <div>
-                    {/* Position Groups */}
+                  <div className="space-y-8">
                     {(() => {
                       const positionGroups = {};
-                      roster.forEach(player => {
+                      roster.forEach((player) => {
                         const position = player.position.name;
                         if (!positionGroups[position]) {
                           positionGroups[position] = [];
                         }
                         positionGroups[position].push(player);
                       });
-                      
-                      // Sort positions in a logical order
+
                       const positionOrder = [
-                        'Pitcher', 'Starting Pitcher', 'Relief Pitcher', 'Catcher', 
-                        'First Baseman', 'Second Baseman', 'Third Baseman', 'Shortstop',
-                        'Left Fielder', 'Center Fielder', 'Right Fielder', 'Designated Hitter'
+                        "Pitcher",
+                        "Starting Pitcher",
+                        "Relief Pitcher",
+                        "Catcher",
+                        "First Baseman",
+                        "Second Baseman",
+                        "Third Baseman",
+                        "Shortstop",
+                        "Left Fielder",
+                        "Center Fielder",
+                        "Right Fielder",
+                        "Designated Hitter",
                       ];
-                      
-                      const sortedPositions = Object.keys(positionGroups).sort((a, b) => {
-                        const aIndex = positionOrder.indexOf(a);
-                        const bIndex = positionOrder.indexOf(b);
-                        if (aIndex === -1 && bIndex === -1) return a.localeCompare(b);
-                        if (aIndex === -1) return 1;
-                        if (bIndex === -1) return -1;
-                        return aIndex - bIndex;
-                      });
-                      
-                      return sortedPositions.map(position => (
-                        <div key={position} className="mb-4">
-                          <h5 className="border-bottom pb-2 mb-3 fw-semibold text-primary">
-                            <i className="fas fa-user me-2"></i>
-                            {position}s ({positionGroups[position].length})
-                          </h5>
-                          <div className="row g-2">
+
+                      const sortedPositions = Object.keys(positionGroups).sort(
+                        (a, b) => {
+                          const aIndex = positionOrder.indexOf(a);
+                          const bIndex = positionOrder.indexOf(b);
+                          if (aIndex === -1 && bIndex === -1)
+                            return a.localeCompare(b);
+                          if (aIndex === -1) return 1;
+                          if (bIndex === -1) return -1;
+                          return aIndex - bIndex;
+                        },
+                      );
+
+                      return sortedPositions.map((position) => (
+                        <div key={position}>
+                          <div className="flex items-center mb-4">
+                            <div className="w-8 h-8 bg-primary-600/20 rounded-lg flex items-center justify-center mr-3">
+                              <UserIcon className="h-4 w-4 text-primary-400" />
+                            </div>
+                            <h3 className="text-xl font-semibold text-white">
+                              {position}s ({positionGroups[position].length})
+                            </h3>
+                          </div>
+                          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {positionGroups[position]
                               .sort((a, b) => {
-                                // Sort by jersey number if available, otherwise by name
                                 const aNum = parseInt(a.jerseyNumber) || 999;
                                 const bNum = parseInt(b.jerseyNumber) || 999;
                                 if (aNum !== bNum) return aNum - bNum;
-                                return a.person.fullName.localeCompare(b.person.fullName);
+                                return a.person.fullName.localeCompare(
+                                  b.person.fullName,
+                                );
                               })
-                              .map(player => (
-                                <div key={player.person.id} className="col-md-6 col-lg-4">
-                                  <div className="card bg-dark border-secondary mb-2">
-                                    <div className="card-body p-3">
-                                      <div className="d-flex align-items-center">
-                                        <div className="flex-shrink-0 me-3">
-                                          <div className="bg-primary rounded-circle d-flex align-items-center justify-content-center" 
-                                               style={{ width: '40px', height: '40px', minWidth: '40px' }}>
-                                            <span className="fw-bold text-white" style={{ fontSize: '0.9rem' }}>
-                                              {player.jerseyNumber || 'N/A'}
-                                            </span>
-                                          </div>
-                                        </div>
-                                        <div className="flex-grow-1">
-                                          <h6 className="mb-1 fw-semibold" style={{ fontSize: '0.95rem', cursor: 'pointer', color: '#4fc3f7', textDecoration: 'underline' }}
-                                            onClick={() => handlePlayerClick(player.person.id)}
-                                          >
-                                            {player.person.fullName}
-                                          </h6>
-                                          <small className="text-white">
-                                            {player.position.name}
-                                          </small>
-                                        </div>
-                                      </div>
+                              .map((player) => (
+                                <div
+                                  key={player.person.id}
+                                  className="content-card p-4 cursor-pointer hover:border-primary-500/50 transition-all"
+                                  onClick={() =>
+                                    handlePlayerClick(player.person.id)
+                                  }
+                                >
+                                  <div className="flex items-center space-x-3">
+                                    <div className="w-12 h-12 bg-dark-800 rounded-lg flex items-center justify-center border border-dark-600">
+                                      <span className="text-primary-400 font-bold text-sm">
+                                        {player.jerseyNumber || "N/A"}
+                                      </span>
+                                    </div>
+                                    <div>
+                                      <h4 className="text-white font-medium hover:text-primary-400 transition-colors">
+                                        {player.person.fullName}
+                                      </h4>
+                                      <p className="text-dark-400 text-sm">
+                                        {player.position.name}
+                                      </p>
                                     </div>
                                   </div>
                                 </div>
@@ -316,34 +410,82 @@ const Teampage = () => {
                     })()}
                   </div>
                 )}
-              </Tab>
-            </Tabs>
+              </div>
+            )}
           </div>
         </div>
       </div>
+
       {/* Player Stats Modal */}
       {isModalOpen && (
-        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.7)', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'auto' }}>
-          <div className="modal-content" style={{ position: 'relative', backgroundColor: '#333', padding: '20px', borderRadius: '8px', maxWidth: '60%', maxHeight: '80vh', overflowY: 'auto', color: '#fff' }}>
-            <button onClick={() => setIsModalOpen(false)} style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', fontSize: '2rem', cursor: 'pointer', color: '#fff' }}>&times;</button>
-            <h4>Player Stats</h4>
-            {statsLoading && <div>Loading player stats...</div>}
-            {statsError && <div className="alert alert-danger">Error: {statsError}</div>}
-            {playerStats && playerStats.splits && playerStats.splits.length > 0 ? (
-              <div>
-                <h6>Season: {playerStats.splits[0].season}</h6>
-                <ul className="list-group list-group-flush">
-                  {Object.entries(playerStats.splits[0].stat).map(([key, value]) => (
-                    <li key={key} className="list-group-item d-flex justify-content-between align-items-center" style={{ backgroundColor: '#444', color: '#fff' }}>
-                      <span style={{ textTransform: 'capitalize' }}>{key.replace(/([A-Z])/g, ' $1')}</span>
-                      <span className="fw-bold">{value}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : !statsLoading && !statsError ? (
-              <div>No stats available for this player.</div>
-            ) : null}
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="content-card max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="sticky top-0 bg-dark-800 border-b border-dark-700 p-6 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-white">
+                Player Statistics
+              </h2>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="p-2 rounded-lg hover:bg-dark-700 transition-colors"
+              >
+                <XMarkIcon className="h-5 w-5 text-dark-400" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              {statsLoading && (
+                <div className="text-center py-8">
+                  <div className="spinner mx-auto mb-4"></div>
+                  <p className="text-dark-400">Loading player stats...</p>
+                </div>
+              )}
+
+              {statsError && (
+                <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                  <p className="text-red-400">Error: {statsError}</p>
+                </div>
+              )}
+
+              {playerStats &&
+                playerStats.splits &&
+                playerStats.splits.length > 0 && (
+                  <div>
+                    <p className="text-dark-400 mb-4">
+                      Season {playerStats.splits[0].season}
+                    </p>
+                    <div className="grid gap-2">
+                      {Object.entries(playerStats.splits[0].stat).map(
+                        ([key, value]) => (
+                          <div
+                            key={key}
+                            className="flex justify-between items-center p-3 bg-dark-800/50 rounded-lg"
+                          >
+                            <span className="text-dark-400 capitalize">
+                              {key.replace(/([A-Z])/g, " $1").trim()}
+                            </span>
+                            <span className="text-white font-semibold">
+                              {value}
+                            </span>
+                          </div>
+                        ),
+                      )}
+                    </div>
+                  </div>
+                )}
+
+              {!statsLoading &&
+                !statsError &&
+                (!playerStats ||
+                  !playerStats.splits ||
+                  playerStats.splits.length === 0) && (
+                  <div className="text-center py-8">
+                    <ChartBarIcon className="h-16 w-16 text-dark-600 mx-auto mb-4" />
+                    <p className="text-dark-400">
+                      No stats available for this player.
+                    </p>
+                  </div>
+                )}
+            </div>
           </div>
         </div>
       )}

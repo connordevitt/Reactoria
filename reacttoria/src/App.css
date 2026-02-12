@@ -1,173 +1,8 @@
-html, body, .App, .container {
-  width: 100%;
-}
+/* iOS-specific styles and remaining utilities */
 
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100%;
-  min-height: 100%;
-  background-color: #343a40;
-  overflow-x: hidden;
-}
-
-body, .App {
-  background-color: #343a40 !important;
-}
-
-.container {
-  padding: 2rem;
-  width: 100%;
-  background-color: transparent;
-}
-
-.card {
-  border-radius: 15px;
-  background: linear-gradient(145deg, #3a3f47, #2c3138);
-  color: #f8f9fa;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin-bottom: 2rem;
-}
-
-.card-body {
-  border-radius: 15px;
-  padding: 2rem;
-  font-size: 1.2rem;
-  color: #f8f9fa;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-}
-
-#footer-content {
-  color: #f8f9fa;
-  text-align: center;
-  padding: 1rem;
-}
-
-footer {
-  width: 100%;
-  margin: 0;
-  padding:1rem;
-  background: linear-gradient(145deg, #343a40);
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
- }
-
-footer .container-fluid {
-  max-width: 100%;
-  padding: 0;
-}
-
-#footer-content small {
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
-  opacity: 0.9;
-}
-
-#footer-content small:hover {
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
-
-
-
-
-.App {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100%;
-  min-height: 100vh;
-  background-color: #343a40;
-  color: #f8f9fa;
-}
-
-.App-header {
-  padding: 20px;
-  margin: 0;
-}
-
-.App-title, .row .lead {
-  font-size: 2.5em;
-  color: white;
-}
-
-.table {
-  table-layout: fixed;
-  width: 100%;
-}
-
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); 
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 9999; 
-}
-
-.spinner-border {
-  width: 3rem;
-  height: 3rem;
-  color: #ffffff; 
-}
-
-.table th, .table td {
-  text-align: center;
-  vertical-align: middle;
-  padding: 0.5rem;
-}
-
-.standings-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 1rem;
-}
-
-.table {
-  margin-bottom: 0;
-  font-size: 0.9rem;
-}
-
-.table th, .table td {
-  padding: 0.5rem;
-}
-
-.table th {
-  background-color: #495057;
-  color: #f8f9fa;
-  font-size: 0.95rem;
-}
-
-.table td {
-  background-color: #343a40;
-  color: #f8f9fa;
-}
-.stat-col {
- width: 2%;
-}
-
-.Team-name{
-  width: 2%; /* Adjust the width as needed because I really can't find a sweet spot. */
-}
-
-.hero-section {
-  background: url('../public/images/wrigley3.jpg');
-  background-size: cover;
-  min-height: 80vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem;
-  
+.team-link {
+  word-break: keep-all; /* Prevents breaking words like "Minnesota" */
+  white-space: normal;
 }
 
 .team-cell {
@@ -175,88 +10,6 @@ footer .container-fluid {
   max-width: 220px;
   word-break: normal;
   white-space: normal;
-}
-
-.team-link {
-  word-break: keep-all; /* Prevents breaking words like "Minnesota" */
-  white-space: normal;
-}
-
-@media (max-width: 768px) {
-  .team-cell .btn {
-    width: auto;
-    min-width: 80px;
-    max-width: 120px;
-    display: inline-block;
-    margin-left: 0 !important;
-    margin-top: 0.5rem;
-    align-self: flex-end;
-  }
-  .team-link {
-    width: auto;
-    display: inline-block;
-    text-align: left;
-    word-break: break-word;
-    white-space: normal;
-  }
-  .team-cell {
-    max-width: 100vw !important;
-    min-width: 0 !important;
-  }
-  .team-link {
-    width: 100%;
-    display: block;
-    text-align: left;
-    word-break: break-word;
-    white-space: normal;
-  }
-  .team-cell .btn {
-    width: 100%;
-    margin-left: 0 !important;
-  }
-  .team-cell {
-    max-width: 100vw;
-  }
-  .standings-container {
-    padding: 0.5rem;
-  }
-
-  .card {
-    border-radius: 10px;
-  }
-
-  .card-body {
-    padding: 1rem;
-    font-size: 1rem;
-  }
-
-  .table {
-    font-size: 0.8rem;
-  }
-
-  .table th, .table td {
-    padding: 0.4rem;
-  }
-  .hero-section {
-    min-height: 50vh;
-    background-attachment: scroll;
-    background-position: center;
-    background-repeat: no-repeat;
-    padding: 4rem 1rem;
-  }
-  .hero-section h1 {
-    font-size: 2.5rem;
-  }
-  .hero-section p {
-    font-size: 1.2rem;
-  }
-  .hero-section .btn {
-    margin-top: 1rem;
-    padding: 0.5rem 1.5rem;
-  }
-  .table {
-    table-layout: auto !important;
-  }
 }
 
 /* iOS-specific styles */
@@ -267,38 +20,23 @@ footer .container-fluid {
     -webkit-tap-highlight-color: transparent;
   }
   
-  .card {
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-  }
-  
-  .btn {
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-  
   /* Prevent zoom on input focus */
   input, select, textarea {
     font-size: 16px !important;
   }
   
   /* Smooth scrolling for iOS */
-  .App {
+  body {
     -webkit-overflow-scrolling: touch;
   }
   
-  /* Better touch targets for iOS */
-  .btn, .nav-link, .team-link {
+  /* Better touch targets for iOS - only for nav elements */
+  nav button, nav a {
     min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
   
   /* iOS status bar spacing */
-  .App {
+  body {
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
     padding-left: env(safe-area-inset-left);

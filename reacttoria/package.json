@@ -5,24 +5,27 @@
   "homepage": "https://connordevitt.github.io/Reactoria/",
   "dependencies": {
     "@capacitor/ios": "^7.4.1",
+    "@heroicons/react": "^2.2.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "aos": "^2.3.4",
     "axios": "^1.8.4",
-    "bootstrap": "^5.3.5",
     "postcss-preset-env": "^10.4.0",
     "react": "^19.1.0",
-    "react-bootstrap": "^2.10.9",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.5.3",
     "react-scripts": "5.0.1",
+    "tailwindcss": "^3.4.19",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "lint": "eslint src --ext .js,.jsx && echo Lint passed",
+    "lint:fix": "eslint src --ext .js,.jsx --fix",
+    "typecheck": "tsc --noEmit && echo Type check passed",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
@@ -53,6 +56,12 @@
   "devDependencies": {
     "@capacitor/cli": "^7.4.1",
     "@capacitor/core": "^7.4.1",
-    "gh-pages": "^6.3.0"
+    "@headlessui/react": "^2.2.9",
+    "autoprefixer": "^10.4.23",
+    "framer-motion": "^12.27.1",
+    "gh-pages": "^6.3.0",
+    "lucide-react": "^0.562.0",
+    "postcss": "^8.5.6",
+    "typescript": "^5.9.3"
   }
 }
