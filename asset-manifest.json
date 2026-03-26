@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/Reactoria/static/css/main.109dc51f.css",
-    "main.js": "/Reactoria/static/js/main.a191b2af.js",
+    "main.css": "/Reactoria/static/css/main.0ea381b2.css",
+    "main.js": "/Reactoria/static/js/main.6bc47680.js",
     "static/js/516.1b6e1d67.chunk.js": "/Reactoria/static/js/516.1b6e1d67.chunk.js",
     "static/js/453.6faa7309.chunk.js": "/Reactoria/static/js/453.6faa7309.chunk.js",
     "static/js/651.0be69831.chunk.js": "/Reactoria/static/js/651.0be69831.chunk.js",
     "index.html": "/Reactoria/index.html",
-    "main.109dc51f.css.map": "/Reactoria/static/css/main.109dc51f.css.map",
-    "main.a191b2af.js.map": "/Reactoria/static/js/main.a191b2af.js.map",
+    "main.0ea381b2.css.map": "/Reactoria/static/css/main.0ea381b2.css.map",
+    "main.6bc47680.js.map": "/Reactoria/static/js/main.6bc47680.js.map",
     "516.1b6e1d67.chunk.js.map": "/Reactoria/static/js/516.1b6e1d67.chunk.js.map",
     "453.6faa7309.chunk.js.map": "/Reactoria/static/js/453.6faa7309.chunk.js.map",
     "651.0be69831.chunk.js.map": "/Reactoria/static/js/651.0be69831.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.109dc51f.css",
-    "static/js/main.a191b2af.js"
+    "static/css/main.0ea381b2.css",
+    "static/js/main.6bc47680.js"
   ]
 }
