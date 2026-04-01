@@ -109,7 +109,8 @@ const Teampage = () => {
         // }
 
         const games = json.dates.flatMap((d) => d.games || []);
-        setRecentGames(games);
+        const recentFive = games.slice(-5).reverse();
+        setRecentGames(recentFive);
       } catch (error) {
         console.error("Error fetching recent games:", error);
         setError(error.message);
@@ -124,7 +125,7 @@ const Teampage = () => {
     setRosterLoading(true);
     setRosterError(null);
 
-    fetch(`https://statsapi.mlb.com/api/v1/teams/${teamId}/roster`)
+    fetch(`https://statsapi.mlb.com/api/v1/teams/${teamId}/roster?rosterType=depthChart`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to get the roster");
         return res.json();
@@ -199,7 +200,7 @@ const Teampage = () => {
         </div>
 
         {/* Tabs */}
-        <div className="glass rounded-xl border border-white/10">
+        <div className="glass rounded-xl border border-white/10 overflow-hidden">
           <div className="border-b border-dark-700">
             <nav className="flex space-x-1 p-1">
               {["overview", "roster"].map((tab) => (
@@ -228,7 +229,7 @@ const Teampage = () => {
             </nav>
           </div>
 
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {activeTab === "overview" && (
               <div className="space-y-6">
                 {/* Team Info */}
@@ -277,20 +278,50 @@ const Teampage = () => {
                       {recentGames.length === 0 ? (
                         <p className="text-dark-400">No recent games found.</p>
                       ) : (
-                        recentGames.slice(0, 5).map((game) => (
-                          <div
-                            key={game.gamePk}
-                            className="flex justify-between items-center p-3 bg-dark-800/50 rounded-lg"
-                          >
-                            <span className="text-white font-medium">
-                              {game.teams?.home?.team?.name || "TBD"}
-                            </span>
-                            <span className="text-primary-400">vs</span>
-                            <span className="text-white font-medium">
-                              {game.teams?.away?.team?.name || "TBD"}
-                            </span>
-                          </div>
-                        ))
+                        recentGames.map((game) => {
+                          const homeWon = game.teams?.home?.isWinner;
+                          const awayWon = game.teams?.away?.isWinner;
+                          const isFinal =
+                            game.status?.abstractGameState === "Final";
+                          return (
+                            <div
+                              key={game.gamePk}
+                              className="grid grid-cols-[1fr_auto_1fr] items-center p-3 bg-dark-800/50 rounded-lg"
+                            >
+                              <span className="text-white font-medium text-left">
+                                {game.teams?.home?.team?.name || "TBD"}
+                                {isFinal && (
+                                  <span
+                                    className={
+                                      homeWon
+                                        ? "text-green-400 ml-2"
+                                        : "text-red-400 ml-2"
+                                    }
+                                  >
+                                    {homeWon ? "W" : "L"}
+                                  </span>
+                                )}
+                              </span>
+                              <span className="text-primary-400 px-2 sm:px-4 text-center shrink-0">
+                                vs
+                              </span>
+                              <span className="text-white font-medium text-right">
+                                {isFinal && (
+                                  <span
+                                    className={
+                                      awayWon
+                                        ? "text-green-400 mr-2"
+                                        : "text-red-400 mr-2"
+                                    }
+                                  >
+                                    {awayWon ? "W" : "L"}
+                                  </span>
+                                )}
+                                {game.teams?.away?.team?.name || "TBD"}
+                              </span>
+                            </div>
+                          );
+                        })
                       )}
                     </div>
                   </div>
@@ -388,7 +419,13 @@ const Teampage = () => {
                                   }
                                 >
                                   <div className="flex items-center space-x-3">
-                                    <div className="w-12 h-12 bg-dark-800 rounded-lg flex items-center justify-center border border-dark-600">
+                                    <div className="w-12 h-12 rounded-lg overflow-hidden border border-dark-600 bg-dark-800 shrink-0">
+                                      <img
+                                        src={`https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_100,q_auto:best/v1/people/${player.person.id}/headshot/67/current`}
+                                        alt={player.person.fullName}
+                                        className="w-full h-full object-cover"
+                                      />
+
                                       <span className="text-primary-400 font-bold text-sm">
                                         {player.jerseyNumber || "N/A"}
                                       </span>
@@ -397,8 +434,13 @@ const Teampage = () => {
                                       <h4 className="text-white font-medium hover:text-primary-400 transition-colors">
                                         {player.person.fullName}
                                       </h4>
-                                      <p className="text-dark-400 text-sm">
+                                      <p className="text-dark-400 text-sm flex items-center gap-2">
                                         {player.position.name}
+                                        {player.status?.description?.includes("Injured List") && (
+                                          <span className="text-red-400 text-xs font-semibold bg-red-500/15 px-1.5 py-0.5 rounded">
+                                            IL
+                                          </span>
+                                        )}
                                       </p>
                                     </div>
                                   </div>

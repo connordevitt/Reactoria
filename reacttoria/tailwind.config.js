@@ -49,6 +49,31 @@ module.exports = {
           900: '#0f172a',
           950: '#020617',
         },
+        // Cubs colorway (landing page only)
+        cubs: {
+          50: '#eef3ff',
+          100: '#d9e4ff',
+          200: '#bccfff',
+          300: '#8db0ff',
+          400: '#5a8bfa',
+          500: '#3468f0',
+          600: '#1a4fd4',
+          700: '#163fac',
+          800: '#14358d',
+          900: '#0E3386',
+        },
+        cubsred: {
+          50: '#fff4f4',
+          100: '#ffe1e1',
+          200: '#ffc8c8',
+          300: '#ffa1a1',
+          400: '#ff6b6b',
+          500: '#f04444',
+          600: '#CC3433',
+          700: '#ab2424',
+          800: '#8c2020',
+          900: '#741f1f',
+        },
         // Enhanced MLB team colors
         mlb: {
           red: '#d50032',
@@ -56,7 +81,6 @@ module.exports = {
           navy: '#13294b',
           gold: '#fdb827',
           green: '#005c5c',
-          // Additional authentic colors
           orange: '#ff6b35',
           brown: '#8b4513',
           gray: '#6c757d',
@@ -73,18 +97,35 @@ module.exports = {
           700: '#334155',
           800: '#1e293b',
           900: '#0f172a',
-        }
+        },
       },
       fontFamily: {
         sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+        display: ['"Big Shoulders Display"', 'system-ui', 'sans-serif'],
+        chicago: ['"Big Shoulders Text"', 'system-ui', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-in-out',
+        'landing-fade-up': 'landingFadeUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'landing-fade-in': 'landingFadeIn 1.1s ease-out both',
+        'landing-shine': 'landingShine 8s ease-in-out infinite',
       },
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        landingFadeUp: {
+          '0%': { opacity: '0', transform: 'translateY(28px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        landingFadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        landingShine: {
+          '0%, 100%': { opacity: '0.35' },
+          '50%': { opacity: '0.65' },
         },
       },
       backdropBlur: {

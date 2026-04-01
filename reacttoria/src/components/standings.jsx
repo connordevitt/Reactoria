@@ -411,7 +411,7 @@ const Standings = () => {
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
-            MLB 2025 Standings
+            MLB 2026 Standings
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-dark-400 mb-6 sm:mb-8">
             Track your favorite teams journey to playoffs
