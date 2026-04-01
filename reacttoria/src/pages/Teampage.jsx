@@ -425,7 +425,6 @@ const Teampage = () => {
                                         alt={player.person.fullName}
                                         className="w-full h-full object-cover"
                                       />
-
                                       <span className="text-primary-400 font-bold text-sm">
                                         {player.jerseyNumber || "N/A"}
                                       </span>
